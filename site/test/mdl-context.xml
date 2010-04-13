@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+           
+  <context:property-placeholder location="site/test/*.properties"/>          
+
+  <!-- services -->
+  
+  <bean id="wurflCapabilityService" class="nz.co.telecom.mobile.wap.mdl.device.WurflCapabilityServiceImpl" destroy-method="cleanup">
+    <constructor-arg type="java.lang.String" value="${mdl.wurflPath}"/>
+  </bean>  
+  <bean id="internetExplorerCapabilityService" class="nz.co.telecom.mobile.wap.mdl.device.InternetExplorerCapabilityServiceImpl"/>
+  <bean id="operaMiniCapabilityService" class="nz.co.telecom.mobile.wap.mdl.device.OperaMiniCapabilityServiceImpl">
+  	<property name="wurflCapabilityService" ref="wurflCapabilityService"/>
+  </bean>
+
+  <bean id="capabilityService" class="nz.co.telecom.mobile.wap.mdl.device.ChainedCapabilityServiceImpl">
+    <property name="capabilityServices">
+    	<list>
+    		<ref bean="wurflCapabilityService"/>
+    		<ref bean="internetExplorerCapabilityService"/>
+    		<ref bean="operaMiniCapabilityService"/>
+    	</list>
+    </property>
+  </bean>  
+  
+  
+</beans>
