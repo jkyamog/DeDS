@@ -1,0 +1,50 @@
+<project name="sampledds" basedir="." default="war">
+
+   <!-- relative paths and non-paths -->
+   <property name="app.name" value="sampledds" />
+   <property name="src.dir" value="src"/>
+   <property name="web.dir" value="web"/>
+   <property name="build.dir" value="build"/>
+   <property name="lib.dir" value="lib"/>
+   <property name="package.war" value="${app.name}.war"/>  
+
+    <path id="compile.classpath">
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${web.dir}/WEB-INF/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <pathelement path="${build.dir}"/>
+    </path>
+
+    <!-- ================ TARGETS ====================== --> 
+
+    <target name="compile" description="Compile main source tree java files">
+      <mkdir dir="${build.dir}"/>
+      <mkdir dir="${build.dir}/WEB-INF"/>
+      <mkdir dir="${build.dir}/WEB-INF/classes"/>
+
+     <copy todir="${build.dir}">
+        <fileset dir="${web.dir}"/>
+     </copy>
+
+      <javac destdir="${build.dir}/WEB-INF/classes" 
+            debug="true" deprecation="false" optimize="false" failonerror="true">
+        <compilerarg value="-Xlint"/>
+        <src path="${src.dir}"/>
+        <classpath refid="compile.classpath"/>
+      </javac>
+    </target>
+  
+    <target name="clean" description="Remove generated class files for clean build">
+      <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="war" description="Build the war file" depends="clean,compile">  
+      <jar destfile="${package.war}">
+        <fileset dir="${build.dir}"/>
+      </jar>
+    </target>
+  	
+</project>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+
+ <display-name>Sample Servlet using DDS</display-name>
+ <description>A Sample servlet using device detection service</description>
+
+  <servlet>
+    <servlet-name>sample servlet</servlet-name>
+    <servlet-class>nz.net.catalyst.mobile.mdl.device.sample.SampleServlet</servlet-class>
+    <init-param>
+      <param-name>dds_url</param-name>
+      <param-value>http://localhost:8080/dds/services</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>sample servlet</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+  
+</web-app>
