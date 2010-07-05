@@ -11,7 +11,7 @@
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>
-    /WEB-INF/mobileweb-servlet.xml
+    /WEB-INF/dds-servlet.xml
     /WEB-INF/mdl-context.xml
     </param-value>
   </context-param>
@@ -21,13 +21,13 @@
   </listener>
   
   <servlet>
-    <servlet-name>mobileweb</servlet-name>
+    <servlet-name>dds</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>mobileweb</servlet-name>
+    <servlet-name>dds</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
