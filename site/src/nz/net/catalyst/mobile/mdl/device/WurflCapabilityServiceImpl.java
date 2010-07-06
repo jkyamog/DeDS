@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2010  Catalyst IT Limited
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 package nz.net.catalyst.mobile.mdl.device;
 
 import java.io.File;
@@ -16,6 +34,14 @@ import net.sourceforge.wurfl.core.CustomWURFLHolder;
 import net.sourceforge.wurfl.core.Device;
 import net.sourceforge.wurfl.core.WURFLHolder;
 
+/**
+ * Capability service implementation that uses the new wurfl java api
+ * This also wathces the wurfl files and reloads them when changed
+ * 
+ * @author jun yamog
+ *
+ */
+
 public class WurflCapabilityServiceImpl implements CapabilityService, ServletContextAware {
    
    private final static Log logger = LogFactory.getLog(WurflCapabilityServiceImpl.class);
@@ -24,17 +50,24 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
 
    private WURFLHolder wurflHolder;
    private ServletContext servletContext;
-   
    private FilesystemAlterationMonitor fam;
-   private String wurflDirPath;
+   private StatusInfo statusInfo;
 
+   private String wurflDirPath;
    private File wurflFile;
    private File[] wurflPatchFiles;
    
-   private StatusInfo statusInfo;
-
+   /**
+    * init will properly initialize this service.  this would look for wurfl files
+    * and instantiate a wurfl holder
+    */
    public void init() {
       
+      // before running init check to see if attributes has been injected/set
+      if (wurflDirPath == null || servletContext == null)
+         throw new IllegalStateException ("wurflDirPath and servletContext is not properly set");
+      
+      // look for wurfl file and patches
       String fullWurflDirPath = servletContext.getRealPath(wurflDirPath);
       File wurflDir = new File(fullWurflDirPath);
       
@@ -57,6 +90,7 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
       }
       this.wurflPatchFiles = patchFiles.toArray(new File[] {});
 
+      // initialize wurfl holder
       this.wurflHolder = new CustomWURFLHolder(this.wurflFile, this.wurflPatchFiles);
       
       watchWurflFile();
@@ -100,6 +134,8 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
                Boolean.valueOf(device.getCapability("xhtml_display_accesskey")).booleanValue());
          deviceInfo.setXhtml_make_phone_call_string(device.getCapability("xhtml_make_phone_call_string"));
          deviceInfo.setLast_modified(getStatusInfo().getLast_modified());
+         deviceInfo.setXhtml_support_level(
+               Integer.valueOf(device.getCapability("xhtml_support_level")).intValue());
       } catch (CapabilityNotDefinedException e) {
          logger.warn(e);
       }
@@ -113,6 +149,7 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
    }
    
    protected StatusInfo getNewStatusInfo(String wurflError) {
+      // look for the last modified date of files
       long lastModified = wurflFile.lastModified();
 
       for (File patchFile:wurflPatchFiles) {
@@ -127,8 +164,6 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
    
    /**
     * create listeners and monitors for wurfl and its patches
-    * 
-    * @param wurflPath
     */
    protected void watchWurflFile() {
 
@@ -167,6 +202,16 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
       this.wurflHolder = wurflHolder;
    }
 
+   public void setWurflDirPath(String wurflDirPath) {
+      this.wurflDirPath = wurflDirPath;
+   }
+
+   @Override
+   public void setServletContext(ServletContext servletContext) {
+      this.servletContext = servletContext;
+      
+   }
+
    protected class WurflFileListener extends FileChangeListener {
 
       public void onFileChange(File pFile) {
@@ -176,16 +221,6 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
             reloadWurfl();
          }
       }
-   }
-   
-   public void setWurflDirPath(String wurflDirPath) {
-      this.wurflDirPath = wurflDirPath;
-   }
-
-   @Override
-   public void setServletContext(ServletContext servletContext) {
-      this.servletContext = servletContext;
-      
    }
 
 
