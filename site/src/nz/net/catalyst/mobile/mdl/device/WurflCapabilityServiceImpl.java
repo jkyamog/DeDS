@@ -1,39 +1,71 @@
 package nz.net.catalyst.mobile.mdl.device;
 
 import java.io.File;
+import java.util.ArrayList;
+
+import javax.servlet.ServletContext;
 
 import org.apache.commons.jci.listeners.FileChangeListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.web.context.ServletContextAware;
 
 import net.sourceforge.wurfl.core.CapabilityNotDefinedException;
 import net.sourceforge.wurfl.core.CustomWURFLHolder;
 import net.sourceforge.wurfl.core.Device;
 import net.sourceforge.wurfl.core.WURFLHolder;
 
-public class WurflCapabilityServiceImpl implements CapabilityService {
+public class WurflCapabilityServiceImpl implements CapabilityService, ServletContextAware {
    
    private final static Log logger = LogFactory.getLog(WurflCapabilityServiceImpl.class);
+   
+   private final static String WURFL_FILENAME = "wurfl.xml";
 
    private WURFLHolder wurflHolder;
+   private ServletContext servletContext;
    
    private FilesystemAlterationMonitor fam;
-   private String wurflPath;
-   private String wurflPatchPath;
+   private String wurflDirPath;
+
+   private File wurflFile;
+   private File[] wurflPatchFiles;
+   
    private StatusInfo statusInfo;
 
-   public WurflCapabilityServiceImpl(String wurflPath) {
-      this.wurflPath = wurflPath;
+   public void init() {
       
-      String wurflDir = StringUtils.removeEnd(wurflPath, "wurfl.xml");
-      this.wurflPatchPath = wurflDir + "wurfl_patch.xml";
+      String fullWurflDirPath = servletContext.getRealPath(wurflDirPath);
+      File wurflDir = new File(fullWurflDirPath);
       
-      wurflHolder = new CustomWURFLHolder(this.wurflPath, new String[] {this.wurflPatchPath});
+      if (!wurflDir.isDirectory()) 
+         throw new IllegalArgumentException("wurflDirPath " + wurflDir.getAbsolutePath() + " is not a directory");
       
-      watchWurflFile(this.wurflPath);
+      ArrayList<File> patchFiles = new ArrayList<File> ();
+
+      logger.info("search for wurfl file and patches on: " + wurflDir.getAbsolutePath());
+      for (String filePath:wurflDir.list()) {
+         File file = new File(wurflDir.getAbsoluteFile() + "/" + filePath);
+         if (WURFL_FILENAME.equals(file.getName())) {
+            wurflFile = file;
+            logger.debug("wurfl file: " + wurflFile.getAbsolutePath());
+         } else {
+            patchFiles.add(file);
+            logger.debug("wurfl patch file: " + file.getAbsolutePath());
+         }
+                  
+      }
+      this.wurflPatchFiles = patchFiles.toArray(new File[] {});
+
+      this.wurflHolder = new CustomWURFLHolder(this.wurflFile, this.wurflPatchFiles);
+      
+      watchWurflFile();
       this.statusInfo = getNewStatusInfo("");
+   }
+   
+   public void cleanup() {
+      logger.info("stopping watching wurfl");
+      fam.stop();
    }
    
    @Override
@@ -81,9 +113,12 @@ public class WurflCapabilityServiceImpl implements CapabilityService {
    }
    
    protected StatusInfo getNewStatusInfo(String wurflError) {
-      long wurflLastModified = (new File(this.wurflPath)).lastModified();
-      long wurflPatchLastModified = (new File(this.wurflPatchPath)).lastModified();
-      long lastModified = (wurflLastModified > wurflPatchLastModified) ? wurflLastModified : wurflPatchLastModified;
+      long lastModified = wurflFile.lastModified();
+
+      for (File patchFile:wurflPatchFiles) {
+         long wurflPatchLastModified = patchFile.lastModified();
+         if (lastModified < wurflPatchLastModified) lastModified = wurflPatchLastModified;
+      }
 
       StatusInfo statusInfo = new StatusInfo(lastModified, wurflError);
       return statusInfo;
@@ -91,30 +126,30 @@ public class WurflCapabilityServiceImpl implements CapabilityService {
    }
    
    /**
-    * create listeners and monitors for wurfl.xml and wurfl_patch.xml
+    * create listeners and monitors for wurfl and its patches
     * 
     * @param wurflPath
     */
-   protected void watchWurflFile(String wurflPath) {
-      String wurflDir = StringUtils.removeEnd(wurflPath, "wurfl.xml");
-      String patchPath = wurflDir + "wurfl_patch.xml";
-      File wurflFile = new File(wurflPath);
-      File patchFile = new File(patchPath);
-      
-      FileChangeListener wurflListener = new WurflFileListener();
-      FileChangeListener wurflPatchListener = new WurflFileListener();
-      
+   protected void watchWurflFile() {
+
       fam = new FilesystemAlterationMonitor();
+      FileChangeListener wurflListener = new WurflFileListener();
       fam.addListener(wurflFile, wurflListener);
-      fam.addListener(patchFile, wurflPatchListener);
-      logger.debug("watching " + wurflPath + " " + patchPath);
+      logger.debug("watching " + wurflFile.getAbsolutePath());
+      
+      for (File patchFile:wurflPatchFiles) {
+         FileChangeListener wurflPatchListener = new WurflFileListener();
+         fam.addListener(patchFile, wurflPatchListener);
+         logger.debug("watching " + patchFile.getAbsolutePath());
+      }
+      
       fam.start();
    }
 
    protected synchronized void reloadWurfl() {
       fam.stop(); // stop watching the file, so we dont keep on calling the callback it while reload is happening
       try {
-         WURFLHolder tempWurflHolder = new CustomWURFLHolder(this.wurflPath, new String[] {this.wurflPatchPath});
+         WURFLHolder tempWurflHolder = new CustomWURFLHolder(this.wurflFile, this.wurflPatchFiles);
          wurflHolder = tempWurflHolder;
          this.statusInfo = getNewStatusInfo("");
          logger.debug("reload successful");
@@ -123,13 +158,8 @@ public class WurflCapabilityServiceImpl implements CapabilityService {
          String errorMessage = (e.getCause() != null) ? e.getCause().getMessage() : e.getMessage();
          this.statusInfo = getNewStatusInfo(errorMessage);
       } finally {
-         watchWurflFile(this.wurflPath);
+         watchWurflFile();
       }
-   }
-
-   public void cleanup() {
-      logger.info("stopping watching wurfl");
-      fam.stop();
    }
 
    
@@ -146,6 +176,16 @@ public class WurflCapabilityServiceImpl implements CapabilityService {
             reloadWurfl();
          }
       }
+   }
+   
+   public void setWurflDirPath(String wurflDirPath) {
+      this.wurflDirPath = wurflDirPath;
+   }
+
+   @Override
+   public void setServletContext(ServletContext servletContext) {
+      this.servletContext = servletContext;
+      
    }
 
 
