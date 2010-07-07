@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="site/web/WEB-INF/lib/commons-io-1.3.2.jar"/>
 	<classpathentry kind="lib" path="site/web/WEB-INF/lib/commons-lang-2.3.jar"/>
 	<classpathentry kind="lib" path="site/web/WEB-INF/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="site/web/WEB-INF/lib/backport-util-concurrent-3.0.jar"/>
 	<classpathentry kind="output" path="site/web/WEB-INF/classes"/>
 </classpath>

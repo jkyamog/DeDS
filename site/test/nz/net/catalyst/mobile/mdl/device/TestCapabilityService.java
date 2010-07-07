@@ -40,7 +40,7 @@ public class TestCapabilityService extends TestCase {
    public void testGetPrefix() {
 
       String userAgent = "NokiaN90-1/2.0523.1.4 Series60/2.8 Profile/MIDP-2.0 Configuration/CLDC-1.1";
-      CapabilityService cs = (CapabilityService) ac.getBean("capabilityService");
+      CapabilityService cs = (CapabilityService) ac.getBean("wurflCapabilityService");
       // Expect true
       HashMap<String, String> headers = new HashMap<String, String> ();
       headers.put("user-agent", userAgent);
@@ -51,7 +51,7 @@ public class TestCapabilityService extends TestCase {
    public void testInternetExplorer() {
       String userAgent = "Treo850/v0100 Mozilla/4.0 (compatible; MSIE 6.0; Windows CE; IEMobile 7.11)";
       String uaPixels = "320x320";
-      CapabilityService cs = (CapabilityService) ac.getBean("capabilityService");
+      CapabilityService cs = (CapabilityService) ac.getBean("internetExplorerCapabilityService");
       HashMap<String, String> headers = new HashMap<String, String> ();
       headers.put("user-agent", userAgent);
       headers.put("UA-pixels", uaPixels);
@@ -67,16 +67,16 @@ public class TestCapabilityService extends TestCase {
 
       String userAgent = "Opera/9.60 (J2ME/MIDP; Opera Mini/4.2.13337/608; U; en) Presto/2.2.0";
       String operaMiniUA = "Mozilla/5.0 (SymbianOS/9.2; U; Series60/3.1 NokiaN95_8GB/30.0.018; Profile/MIDP-2.0 Configuration/CLDC-1.1 ) AppleWebKit/413 (KHTML, like Gecko) Safari/413";
-      CapabilityService cs = (CapabilityService) ac.getBean("capabilityService");
+      CapabilityService cs = (CapabilityService) ac.getBean("operaMiniCapabilityService");
 
       HashMap<String, String> headers = new HashMap<String, String> ();
       headers.put("user-agent", userAgent);
       headers.put("X-OperaMini-Phone-UA", operaMiniUA);
       RequestInfo requestInfo = new RequestInfo(headers);
-      assertEquals(232, cs.getDeviceInfo(requestInfo).getMax_image_width());
+      assertEquals(234, cs.getDeviceInfo(requestInfo).getMax_image_width());
 
       cs = (CapabilityService) ac.getBean("wurflCapabilityService");
-      assertEquals(240, cs.getDeviceInfo(requestInfo).getMax_image_width());
+      assertEquals(165, cs.getDeviceInfo(requestInfo).getMax_image_width());
 
    }
 }

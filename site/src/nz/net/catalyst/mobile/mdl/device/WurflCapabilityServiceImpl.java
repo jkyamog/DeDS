@@ -64,12 +64,17 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
    public void init() {
       
       // before running init check to see if attributes has been injected/set
-      if (wurflDirPath == null || servletContext == null)
-         throw new IllegalStateException ("wurflDirPath and servletContext is not properly set");
+      if (wurflDirPath == null)
+         throw new IllegalStateException ("wurflDirPath not properly set");
       
       // look for wurfl file and patches
-      String fullWurflDirPath = servletContext.getRealPath(wurflDirPath);
-      File wurflDir = new File(fullWurflDirPath);
+      File wurflDir = new File(wurflDirPath);
+      // if file does not exists, it might be relative to the servlet
+      if (!wurflDir.exists() && servletContext != null) 
+         wurflDir = new File(servletContext.getRealPath(wurflDirPath));
+      // check again
+      if (!wurflDir.exists())
+         throw new IllegalArgumentException("wurflDirPath " + wurflDir.getAbsolutePath() + " does not exists");
       
       if (!wurflDir.isDirectory()) 
          throw new IllegalArgumentException("wurflDirPath " + wurflDir.getAbsolutePath() + " is not a directory");

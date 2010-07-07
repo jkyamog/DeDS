@@ -6,8 +6,9 @@
                            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
-           
-  <context:property-placeholder location="site/test/*.properties"/>          
+
+            
+  <context:property-placeholder location="site/test/mdl.properties"/>
 
   <bean id="wurflCapabilityService" class="nz.net.catalyst.mobile.mdl.device.WurflCapabilityServiceImpl" init-method="init" destroy-method="cleanup">
      <property name="wurflDirPath" value="${mdl.wurflDirPath}"/>
