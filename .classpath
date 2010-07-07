@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="site/src"/>
-	<classpathentry kind="src" path="site/test"/>
+	<classpathentry kind="src" path="main/src"/>
+	<classpathentry kind="src" path="main/test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="locallib/junit.jar"/>
-	<classpathentry kind="lib" path="locallib/servlet-api-2.4.jar"/>
-	<classpathentry kind="lib" path="locallib/spring-mock.jar" sourcepath="sources/spring-test-sources.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/commons-jci-core-1.0.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/commons-jci-fam-1.0.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/commons-logging-1.1.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/spring-webmvc.jar" sourcepath="sources/spring-webmvc-sources.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/spring.jar" sourcepath="sources/spring-context-sources.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/jackson-core-asl-1.0.1.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/jackson-mapper-asl-1.0.1.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/wurfl-1.0.1.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/commons-io-1.3.2.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/commons-lang-2.3.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/commons-collections-3.2.1.jar"/>
-	<classpathentry kind="lib" path="site/web/WEB-INF/lib/backport-util-concurrent-3.0.jar"/>
-	<classpathentry kind="output" path="site/web/WEB-INF/classes"/>
+	<classpathentry kind="lib" path="main/locallib/junit.jar"/>
+	<classpathentry kind="lib" path="main/locallib/servlet-api-2.4.jar"/>
+	<classpathentry kind="lib" path="main/locallib/spring-mock.jar" sourcepath="sources/spring-test-sources.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/commons-jci-core-1.0.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/commons-jci-fam-1.0.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/spring-webmvc.jar" sourcepath="sources/spring-webmvc-sources.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/spring.jar" sourcepath="sources/spring-context-sources.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/jackson-core-asl-1.0.1.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/jackson-mapper-asl-1.0.1.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/wurfl-1.0.1.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/commons-io-1.3.2.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/commons-lang-2.3.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/backport-util-concurrent-3.0.jar"/>
+	<classpathentry kind="output" path="main/build/WEB-INF/classes"/>
 </classpath>
