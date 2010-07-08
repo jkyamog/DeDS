@@ -132,6 +132,8 @@ public class ChainedCapabilityServiceImpl extends CachedCapabilityService {
          di1.setXhtml_make_phone_call_string(di2.getXhtml_make_phone_call_string());
       if (di2.getXhtml_support_level() > di1.getXhtml_support_level()) di1.setXhtml_support_level(di2.getXhtml_support_level());
       if (di2.getLast_modified() > di1.getLast_modified()) di1.setLast_modified(di2.getLast_modified());
+      if (di2.getResolution_width() > 0) di1.setResolution_width(di2.getResolution_width());
+      if (di2.getResolution_height() > 0) di1.setResolution_height(di2.getResolution_height());
       
       if (logger.isDebugEnabled())
          logger.debug("merged result = " + di1.toStringForDebug());

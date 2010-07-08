@@ -141,6 +141,11 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
          deviceInfo.setLast_modified(getStatusInfo().getLast_modified());
          deviceInfo.setXhtml_support_level(
                Integer.valueOf(device.getCapability("xhtml_support_level")).intValue());
+         deviceInfo.setResolution_width(
+               Integer.valueOf(device.getCapability("resolution_width")).intValue());
+         deviceInfo.setResolution_height(
+               Integer.valueOf(device.getCapability("resolution_height")).intValue());
+         
       } catch (CapabilityNotDefinedException e) {
          logger.warn(e);
       }

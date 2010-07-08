@@ -35,6 +35,8 @@ public class DeviceInfo {
    private String user_agent;
    private String device_id;
    private int max_image_width;
+   private int resolution_width;
+   private int resolution_height;
    private boolean xhtml_display_accesskey;
    private String xhtml_make_phone_call_string;
    private int xhtml_support_level;
@@ -105,6 +107,18 @@ public class DeviceInfo {
    public int getXhtml_support_level() {
       return xhtml_support_level;
    }
+   public void setResolution_width(int resolution_width) {
+      this.resolution_width = resolution_width;
+   }
+   public int getResolution_width() {
+      return resolution_width;
+   }
+   public void setResolution_height(int resolution_height) {
+      this.resolution_height = resolution_height;
+   }
+   public int getResolution_height() {
+      return resolution_height;
+   }
    /**
     * for debugging purposes ONLY!!!
     * MAKE SURE TO WRAP THIS ON logger.isDebugEnabled() condition
@@ -112,5 +126,5 @@ public class DeviceInfo {
    public String toStringForDebug() {
       return ReflectionToStringBuilder.toString(this);
    }
-
+ 
 }

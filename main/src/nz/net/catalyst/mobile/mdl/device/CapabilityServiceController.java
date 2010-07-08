@@ -140,7 +140,9 @@ public class CapabilityServiceController extends MultiActionController {
       mav.addObject("statusinfo", status);
       
       DeviceInfo deviceInfo = capabilityService.getDeviceInfo(RequestInfo.getRequestInfo(request));
-      String deviceStr = StringUtils.substringBetween(deviceInfo.toStringForDebug(), "[", "]");
+      String deviceStr = StringUtils.replace(
+         StringUtils.substringBetween(deviceInfo.toStringForDebug(), "[", "]"), ",", "<br/>");
+      
       mav.addObject("device", deviceStr);
       
       mav.setViewName("status-page");
