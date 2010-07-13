@@ -122,11 +122,8 @@ public class CapabilityServiceController extends MultiActionController {
    public void get_statusinfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
       StatusInfo status = capabilityService.getStatusInfo();
        
-      // removing last error, as we not yet allowing 3rd party to view this
-      StatusInfo noErrorStatus = new StatusInfo(status.getLast_modified(), ""); 
-      
       try {
-         capabilityServiceDeSerializer.serializeStatusInfo(noErrorStatus, response.getOutputStream());
+         capabilityServiceDeSerializer.serializeStatusInfo(status, response.getOutputStream());
       } catch (Exception e) {
          logger.error("Unknown problem w/ service", e);
          throw e;
