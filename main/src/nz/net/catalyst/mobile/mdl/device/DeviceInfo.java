@@ -41,6 +41,7 @@ public class DeviceInfo {
    private String xhtml_make_phone_call_string;
    private int xhtml_support_level;
    private long last_modified;
+   private String pointing_method;
 
    /**
     * set the last known unix time when this device was last modified
@@ -118,6 +119,12 @@ public class DeviceInfo {
    }
    public int getResolution_height() {
       return resolution_height;
+   }
+   public void setPointing_method(String pointing_method) {
+      this.pointing_method = pointing_method;
+   }
+   public String getPointing_method() {
+      return pointing_method;
    }
    /**
     * for debugging purposes ONLY!!!

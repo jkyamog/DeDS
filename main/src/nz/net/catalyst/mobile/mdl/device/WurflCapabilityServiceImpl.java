@@ -87,7 +87,7 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
          if (WURFL_FILENAME.equals(file.getName())) {
             wurflFile = file;
             logger.debug("wurfl file: " + wurflFile.getAbsolutePath());
-         } else {
+         } else if (file.getName().endsWith(".xml")) {
             patchFiles.add(file);
             logger.debug("wurfl patch file: " + file.getAbsolutePath());
          }
@@ -145,7 +145,8 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
                Integer.valueOf(device.getCapability("resolution_width")).intValue());
          deviceInfo.setResolution_height(
                Integer.valueOf(device.getCapability("resolution_height")).intValue());
-         
+         deviceInfo.setPointing_method(device.getCapability("pointing_method"));
+
       } catch (CapabilityNotDefinedException e) {
          logger.warn(e);
       }
@@ -208,10 +209,6 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
    }
 
    
-   public void setWurflHolder(WURFLHolder wurflHolder) {
-      this.wurflHolder = wurflHolder;
-   }
-
    public void setWurflDirPath(String wurflDirPath) {
       this.wurflDirPath = wurflDirPath;
    }

@@ -134,6 +134,7 @@ public class ChainedCapabilityServiceImpl extends CachedCapabilityService {
       if (di2.getLast_modified() > di1.getLast_modified()) di1.setLast_modified(di2.getLast_modified());
       if (di2.getResolution_width() > 0) di1.setResolution_width(di2.getResolution_width());
       if (di2.getResolution_height() > 0) di1.setResolution_height(di2.getResolution_height());
+      if (StringUtils.isNotEmpty(di2.getPointing_method())) di1.setPointing_method(di2.getPointing_method());
       
       if (logger.isDebugEnabled())
          logger.debug("merged result = " + di1.toStringForDebug());
