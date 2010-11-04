@@ -146,7 +146,8 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
          deviceInfo.setResolution_height(
                Integer.valueOf(device.getCapability("resolution_height")).intValue());
          deviceInfo.setPointing_method(device.getCapability("pointing_method"));
-
+         deviceInfo.setMobile_browser(device.getCapability("mobile_browser"));
+         
       } catch (CapabilityNotDefinedException e) {
          logger.warn(e);
       }

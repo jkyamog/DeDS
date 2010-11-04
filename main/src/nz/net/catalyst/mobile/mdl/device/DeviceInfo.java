@@ -42,6 +42,7 @@ public class DeviceInfo {
    private int xhtml_support_level;
    private long last_modified;
    private String pointing_method;
+   private String mobile_browser;
 
    /**
     * set the last known unix time when this device was last modified
@@ -125,6 +126,12 @@ public class DeviceInfo {
    }
    public String getPointing_method() {
       return pointing_method;
+   }
+   public void setMobile_browser(String mobile_browser) {
+      this.mobile_browser = mobile_browser;
+   }
+   public String getMobile_browser() {
+      return mobile_browser;
    }
    /**
     * for debugging purposes ONLY!!!
