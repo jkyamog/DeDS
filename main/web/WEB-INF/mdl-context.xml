@@ -13,6 +13,7 @@
      <property name="wurflDirPath" value="${mdl.wurflDirPath}"/>
   </bean>
 
+<!--  capability services that are not used 
   <bean id="internetExplorerCapabilityService" class="nz.net.catalyst.mobile.mdl.device.InternetExplorerCapabilityServiceImpl"/>
   <bean id="operaMiniCapabilityService" class="nz.net.catalyst.mobile.mdl.device.OperaMiniCapabilityServiceImpl">
     <property name="wurflCapabilityService" ref="wurflCapabilityService"/>
@@ -27,7 +28,7 @@
       </list>
     </property>
   </bean>  
-
+-->
   <bean id="capabilityServiceDeSerializer" class="nz.net.catalyst.mobile.mdl.device.JacksonCapabilityServiceDeSerializerImpl"/>
   
 </beans>
