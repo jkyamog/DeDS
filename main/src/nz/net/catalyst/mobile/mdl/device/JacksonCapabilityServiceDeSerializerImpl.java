@@ -75,6 +75,8 @@ public class JacksonCapabilityServiceDeSerializerImpl
    public void serializeCapability(Object capability, OutputStream outputStream)
          throws IOException, ParseException {
 
+      serializeObject(capability, outputStream);
+/*      
       try {
          // it may seem silly to write the value straight, however it is a valid
          // json notation.  This leaves the other side to decode and decide
@@ -87,7 +89,7 @@ public class JacksonCapabilityServiceDeSerializerImpl
          logger.warn("unable to serialize capability", e);
          throw new ParseException(e.getMessage(),0);
       }
-      
+*/      
    }
 
    @Override

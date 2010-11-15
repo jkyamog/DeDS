@@ -19,6 +19,7 @@
 package nz.net.catalyst.mobile.mdl.device;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -108,6 +109,35 @@ public class CapabilityServiceController extends MultiActionController {
          capabilityServiceDeSerializer.serializeCapability(capabilityValue, response.getOutputStream());
          
          logger.debug("capabilityValue = " + capabilityValue);
+      } catch (ParseException e) {
+         response.getWriter().print("ERROR: Parsing problem: " + e.getMessage());
+      } catch (IllegalArgumentException e) {
+         response.getWriter().print("ERROR: Parsing problem: " + e.getMessage());
+      } catch (Exception e) {
+         logger.error("Unknown problem w/ service", e);
+         throw e;
+      }
+      
+   }
+   
+   public void get_capabilities(HttpServletRequest request, HttpServletResponse response) throws Exception {
+      String headersStr = request.getParameter(HEADERS);
+      String[] capabilities = request.getParameterValues(CAPABILITY);
+      
+      if (StringUtils.isEmpty(headersStr)) {
+         response.getWriter().print("ERROR: Missing required parameter '" + HEADERS + "'");
+         return;
+      }
+      if (capabilities == null || capabilities.length == 0) {
+         response.getWriter().print("ERROR: Missing required parameter '" + CAPABILITY + "'");
+         return;
+      }
+
+      try {
+         Map<String, String> headers = capabilityServiceDeSerializer.deserializeHeaders(IOUtils.toInputStream(headersStr));
+   
+         Map<String, Object> capabilitiesMap = capabilityService.getCapabilitiesForDevice(new RequestInfo(headers), Arrays.asList(capabilities));
+         capabilityServiceDeSerializer.serializeCapability(capabilitiesMap, response.getOutputStream());
       } catch (ParseException e) {
          response.getWriter().print("ERROR: Parsing problem: " + e.getMessage());
       } catch (IllegalArgumentException e) {

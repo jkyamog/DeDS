@@ -18,6 +18,7 @@
 
 package nz.net.catalyst.mobile.mdl.device;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -74,6 +75,13 @@ public class InternetExplorerCapabilityServiceImpl implements CapabilityService 
             return dimensions[0];
          }
       }
+      return null;
+   }
+
+   @Override
+   public Map<String, Object> getCapabilitiesForDevice(RequestInfo requestInfo,
+         List<String> capabilities) {
+      // TODO Auto-generated method stub
       return null;
    }
    

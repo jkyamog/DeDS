@@ -18,6 +18,9 @@
 
 package nz.net.catalyst.mobile.mdl.device;
 
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Interface for getting capability for a mobile device
@@ -38,6 +41,7 @@ public interface CapabilityService {
     */
    public String getCapabilityForDevice(RequestInfo requestInfo, String capability);
 
+   public Map<String, Object> getCapabilitiesForDevice(RequestInfo requestInfo, List<String> capabilities);
    /**
     * Retrieves the DeviceInfo from the request info which contains importat info about the
     * http request

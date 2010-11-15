@@ -20,6 +20,9 @@ package nz.net.catalyst.mobile.mdl.device;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -122,6 +125,30 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
          logger.warn(e);
          return "";
       }
+   }
+   
+   @Override
+   public Map<String, Object> getCapabilitiesForDevice(RequestInfo requestInfo,
+         List<String> capabilities) {
+      Device device = wurflHolder.getWURFLManager().getDeviceForRequest(requestInfo.getUserAgent());
+      Map<String, Object> capabilitiesMap = new HashMap<String, Object> (); 
+      
+      for (String capability:capabilities) {
+         String capabilityStr = device.getCapability(capability);
+         try {
+            Integer capabilityInt = Integer.parseInt(capabilityStr);
+            capabilitiesMap.put(capability, capabilityInt);
+         } catch (NumberFormatException e) {
+            if ("true".equalsIgnoreCase(capabilityStr) || "false".equalsIgnoreCase(capabilityStr)) {
+               Boolean capabilityBoolean = Boolean.parseBoolean(capabilityStr);
+               capabilitiesMap.put(capability, capabilityBoolean);
+            } else {
+               capabilitiesMap.put(capability, capabilityStr);
+            }
+         }
+      }
+      
+      return capabilitiesMap;
    }
 
    @Override
