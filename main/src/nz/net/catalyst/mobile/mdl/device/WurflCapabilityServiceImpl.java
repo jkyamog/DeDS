@@ -134,7 +134,15 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
       Map<String, Object> capabilitiesMap = new HashMap<String, Object> (); 
       
       for (String capability:capabilities) {
-         String capabilityStr = device.getCapability(capability);
+         String capabilityStr;
+      
+         try {
+            capabilityStr = device.getCapability(capability);
+         } catch (CapabilityNotDefinedException e) {
+            logger.warn(e);
+            continue;
+         }
+         
          try {
             Integer capabilityInt = Integer.parseInt(capabilityStr);
             capabilitiesMap.put(capability, capabilityInt);

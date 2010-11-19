@@ -51,7 +51,7 @@ public class CapabilityServiceController extends MultiActionController {
 
    private final static Log logger = LogFactory.getLog(CapabilityServiceController.class);
    
-   private CapabiltyServiceDeSerializer capabilityServiceDeSerializer;
+   private ObjectDeSerializer objectDeSerializer;
    private CapabilityService capabilityService;
    
 
@@ -67,10 +67,10 @@ public class CapabilityServiceController extends MultiActionController {
       
       try {
          Map<String, String>headers = 
-            capabilityServiceDeSerializer.deserializeHeaders(IOUtils.toInputStream(headersStr));
+            objectDeSerializer.deserialize(IOUtils.toInputStream(headersStr));
    
          DeviceInfo deviceInfo = capabilityService.getDeviceInfo(new RequestInfo(headers));
-         capabilityServiceDeSerializer.serializeDeviceInfo(deviceInfo, response.getOutputStream());
+         objectDeSerializer.serialize(deviceInfo, response.getOutputStream());
    
          if (logger.isDebugEnabled())
             ReflectionToStringBuilder.toString(deviceInfo);
@@ -103,10 +103,10 @@ public class CapabilityServiceController extends MultiActionController {
 
       Map<String, String> headers;
       try {
-         headers = capabilityServiceDeSerializer.deserializeHeaders(IOUtils.toInputStream(headersStr));
+         headers = objectDeSerializer.deserialize(IOUtils.toInputStream(headersStr));
          
          String capabilityValue = capabilityService.getCapabilityForDevice(new RequestInfo(headers), capability);
-         capabilityServiceDeSerializer.serializeCapability(capabilityValue, response.getOutputStream());
+         objectDeSerializer.serialize(capabilityValue, response.getOutputStream());
          
          logger.debug("capabilityValue = " + capabilityValue);
       } catch (ParseException e) {
@@ -134,10 +134,10 @@ public class CapabilityServiceController extends MultiActionController {
       }
 
       try {
-         Map<String, String> headers = capabilityServiceDeSerializer.deserializeHeaders(IOUtils.toInputStream(headersStr));
+         Map<String, String> headers = objectDeSerializer.deserialize(IOUtils.toInputStream(headersStr));
    
          Map<String, Object> capabilitiesMap = capabilityService.getCapabilitiesForDevice(new RequestInfo(headers), Arrays.asList(capabilities));
-         capabilityServiceDeSerializer.serializeCapability(capabilitiesMap, response.getOutputStream());
+         objectDeSerializer.serialize(capabilitiesMap, response.getOutputStream());
       } catch (ParseException e) {
          response.getWriter().print("ERROR: Parsing problem: " + e.getMessage());
       } catch (IllegalArgumentException e) {
@@ -153,7 +153,7 @@ public class CapabilityServiceController extends MultiActionController {
       StatusInfo status = capabilityService.getStatusInfo();
        
       try {
-         capabilityServiceDeSerializer.serializeStatusInfo(status, response.getOutputStream());
+         objectDeSerializer.serialize(status, response.getOutputStream());
       } catch (Exception e) {
          logger.error("Unknown problem w/ service", e);
          throw e;
@@ -177,8 +177,8 @@ public class CapabilityServiceController extends MultiActionController {
    }
 
 
-   public void setCapabilityServiceDeSerializer(CapabiltyServiceDeSerializer capabilityServiceDeSerializer) {
-      this.capabilityServiceDeSerializer = capabilityServiceDeSerializer;
+   public void setObjectDeSerializer(ObjectDeSerializer objectDeSerializer) {
+      this.objectDeSerializer = objectDeSerializer;
    }
 
    public void setCapabilityService(CapabilityService capablityService) {

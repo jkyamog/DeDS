@@ -29,6 +29,6 @@
     </property>
   </bean>  
 -->
-  <bean id="capabilityServiceDeSerializer" class="nz.net.catalyst.mobile.mdl.device.JacksonCapabilityServiceDeSerializerImpl"/>
+  <bean id="objectDeSerializer" class="nz.net.catalyst.mobile.mdl.device.JsonDeSerializerImpl"/>
   
 </beans>

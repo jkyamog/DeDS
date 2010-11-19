@@ -41,12 +41,20 @@ public interface CapabilityService {
     */
    public String getCapabilityForDevice(RequestInfo requestInfo, String capability);
 
+   /**
+    * Given the requestInfo and a List of capabilities, return a Map that would contain the
+    * capabilities as keys with values
+    * @param requestInfo
+    * @param capabilities
+    * @return
+    */
    public Map<String, Object> getCapabilitiesForDevice(RequestInfo requestInfo, List<String> capabilities);
    /**
     * Retrieves the DeviceInfo from the request info which contains importat info about the
     * http request
     * @param requestInfo
     * @return DeviceInfo
+    * @deprecated use getCapabilitiesForDevice
     */
    public DeviceInfo getDeviceInfo(RequestInfo requestInfo);
    
