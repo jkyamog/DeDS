@@ -10,30 +10,15 @@
             
   <context:property-placeholder location="site/test/mdl.properties"/>
 
-  <bean id="wurflCapabilityService" class="nz.net.catalyst.mobile.mdl.device.WurflCapabilityServiceImpl" init-method="init" destroy-method="cleanup">
+  <bean id="capabilityService" class="nz.net.catalyst.mobile.mdl.device.WurflCapabilityServiceImpl" init-method="init" destroy-method="cleanup">
      <property name="wurflDirPath" value="${mdl.wurflDirPath}"/>
   </bean>
 
-  <bean id="internetExplorerCapabilityService" class="nz.net.catalyst.mobile.mdl.device.InternetExplorerCapabilityServiceImpl"/>
-  <bean id="operaMiniCapabilityService" class="nz.net.catalyst.mobile.mdl.device.OperaMiniCapabilityServiceImpl">
-    <property name="wurflCapabilityService" ref="wurflCapabilityService"/>
-  </bean>
-
-  <bean id="chainedCapabilityService" class="nz.net.catalyst.mobile.mdl.device.ChainedCapabilityServiceImpl">
-    <property name="capabilityServices">
-      <list>
-        <ref bean="wurflCapabilityService"/>
-        <ref bean="internetExplorerCapabilityService"/>
-        <ref bean="operaMiniCapabilityService"/>
-      </list>
-    </property>
-  </bean>  
-
-  <bean id="capabilityServiceDeSerializer" class="nz.net.catalyst.mobile.mdl.device.JacksonCapabilityServiceDeSerializerImpl"/>
+  <bean id="objectDeSerializer" class="nz.net.catalyst.mobile.mdl.device.JsonDeSerializerImpl"/>
   
   <bean id="capabilityServiceController" class="nz.net.catalyst.mobile.mdl.device.CapabilityServiceController">
     <property name="capabilityService" ref="wurflCapabilityService"/>
-    <property name="capabilityServiceDeSerializer" ref="capabilityServiceDeSerializer"/>
+    <property name="objectDeSerializer" ref="objectDeSerializer"/>
   </bean>  
-  
+
 </beans>

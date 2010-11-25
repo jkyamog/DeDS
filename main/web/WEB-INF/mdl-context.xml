@@ -9,26 +9,10 @@
            
   <context:property-placeholder location="/WEB-INF/config/*.properties"/>
         
-  <bean id="wurflCapabilityService" class="nz.net.catalyst.mobile.mdl.device.WurflCapabilityServiceImpl" init-method="init" destroy-method="cleanup">
+  <bean id="capabilityService" class="nz.net.catalyst.mobile.mdl.device.WurflCapabilityServiceImpl" init-method="init" destroy-method="cleanup">
      <property name="wurflDirPath" value="${mdl.wurflDirPath}"/>
   </bean>
 
-<!--  capability services that are not used 
-  <bean id="internetExplorerCapabilityService" class="nz.net.catalyst.mobile.mdl.device.InternetExplorerCapabilityServiceImpl"/>
-  <bean id="operaMiniCapabilityService" class="nz.net.catalyst.mobile.mdl.device.OperaMiniCapabilityServiceImpl">
-    <property name="wurflCapabilityService" ref="wurflCapabilityService"/>
-  </bean>
-
-  <bean id="chainedCapabilityService" class="nz.net.catalyst.mobile.mdl.device.ChainedCapabilityServiceImpl">
-    <property name="capabilityServices">
-      <list>
-        <ref bean="wurflCapabilityService"/>
-        <ref bean="internetExplorerCapabilityService"/>
-        <ref bean="operaMiniCapabilityService"/>
-      </list>
-    </property>
-  </bean>  
--->
   <bean id="objectDeSerializer" class="nz.net.catalyst.mobile.mdl.device.JsonDeSerializerImpl"/>
   
 </beans>

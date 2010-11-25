@@ -21,13 +21,13 @@ package nz.net.catalyst.mobile.mdl.device;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
@@ -55,71 +55,6 @@ public class CapabilityServiceController extends MultiActionController {
    private CapabilityService capabilityService;
    
 
-   public void get_deviceinfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
-      
-      String headersStr = request.getParameter(HEADERS);
-      
-      if (StringUtils.isEmpty(headersStr)) {
-         response.getWriter().print("ERROR: Missing required parameter '" + HEADERS + "'");
-         return;
-      }
-      logger.debug("headers = " + headersStr);
-      
-      try {
-         Map<String, String>headers = 
-            objectDeSerializer.deserialize(IOUtils.toInputStream(headersStr));
-   
-         DeviceInfo deviceInfo = capabilityService.getDeviceInfo(new RequestInfo(headers));
-         objectDeSerializer.serialize(deviceInfo, response.getOutputStream());
-   
-         if (logger.isDebugEnabled())
-            ReflectionToStringBuilder.toString(deviceInfo);
-         
-      } catch (ParseException e) {
-         response.getWriter().print("ERROR: Parsing problem: " + e.getMessage());
-      } catch (IllegalArgumentException e) {
-         response.getWriter().print("ERROR: Parsing problem: " + e.getMessage());
-      } catch (Exception e) {
-         logger.error("Unknown problem w/ service", e);
-         throw e;
-      }
-
-   }
-   
-   public void get_capability(HttpServletRequest request, HttpServletResponse response) throws Exception {
-      
-      String headersStr = request.getParameter(HEADERS);
-      String capability = request.getParameter(CAPABILITY);
-
-      if (StringUtils.isEmpty(headersStr)) {
-         response.getWriter().print("ERROR: Missing required parameter '" + HEADERS + "'");
-         return;
-      }
-      if (StringUtils.isEmpty(capability)) {
-         response.getWriter().print("ERROR: Missing required parameter '" + CAPABILITY + "'");
-         return;
-      }
-      logger.debug("capability = " + capability + " headers = " + headersStr);
-
-      Map<String, String> headers;
-      try {
-         headers = objectDeSerializer.deserialize(IOUtils.toInputStream(headersStr));
-         
-         String capabilityValue = capabilityService.getCapabilityForDevice(new RequestInfo(headers), capability);
-         objectDeSerializer.serialize(capabilityValue, response.getOutputStream());
-         
-         logger.debug("capabilityValue = " + capabilityValue);
-      } catch (ParseException e) {
-         response.getWriter().print("ERROR: Parsing problem: " + e.getMessage());
-      } catch (IllegalArgumentException e) {
-         response.getWriter().print("ERROR: Parsing problem: " + e.getMessage());
-      } catch (Exception e) {
-         logger.error("Unknown problem w/ service", e);
-         throw e;
-      }
-      
-   }
-   
    public void get_capabilities(HttpServletRequest request, HttpServletResponse response) throws Exception {
       String headersStr = request.getParameter(HEADERS);
       String[] capabilities = request.getParameterValues(CAPABILITY);
@@ -166,9 +101,24 @@ public class CapabilityServiceController extends MultiActionController {
       StatusInfo status = capabilityService.getStatusInfo();
       mav.addObject("statusinfo", status);
       
-      DeviceInfo deviceInfo = capabilityService.getDeviceInfo(RequestInfo.getRequestInfo(request));
-      String deviceStr = StringUtils.replace(
-         StringUtils.substringBetween(deviceInfo.toStringForDebug(), "[", "]"), ",", "<br/>");
+      Map<String, Object> capabilitiesMap = capabilityService.getCapabilitiesForDevice(RequestInfo.getRequestInfo(request),
+            Arrays.asList(new String[] {"brand_name", 
+                                       "model_name", 
+                                       "device_id", 
+                                       "user_agent",
+                                       "max_image_width",
+                                       "resolution_width",
+                                       "resolution_height",
+                                       "xhtml_display_accesskey",
+                                       "xhtml_make_phone_call_string",
+                                       "xhtml_support_level",
+                                       "pointing_method",
+                                       "mobile_browser"}));
+      
+      StringBuilder deviceStr = new StringBuilder();
+      for (Entry<String, Object> capability: capabilitiesMap.entrySet()) {
+         deviceStr.append(capability.getKey() + " = " + capability.getValue() + "<br>");
+      }
       
       mav.addObject("device", deviceStr);
       

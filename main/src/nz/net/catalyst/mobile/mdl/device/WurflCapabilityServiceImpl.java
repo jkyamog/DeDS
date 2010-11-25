@@ -111,23 +111,6 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
    }
    
    @Override
-   public String getCapabilityForDevice(RequestInfo requestInfo,
-         String capability) {
-      try {
-         Device device = wurflHolder.getWURFLManager().getDeviceForRequest(requestInfo.getUserAgent());
-         String capabilityValue = device.getCapability(capability);
-         
-         logger.debug(" Capability: " + capability + 
-               " Capability value: " + capabilityValue);
-   
-         return capabilityValue;
-      } catch (CapabilityNotDefinedException e) {
-         logger.warn(e);
-         return "";
-      }
-   }
-   
-   @Override
    public Map<String, Object> getCapabilitiesForDevice(RequestInfo requestInfo,
          List<String> capabilities) {
       Device device = wurflHolder.getWURFLManager().getDeviceForRequest(requestInfo.getUserAgent());
@@ -137,7 +120,12 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
          String capabilityStr;
       
          try {
-            capabilityStr = device.getCapability(capability);
+            if ("device_id".equals(capability))
+               capabilityStr = device.getId();
+            else if ("user_agent".equals(capability))
+               capabilityStr = requestInfo.getUserAgent();
+            else
+               capabilityStr = device.getCapability(capability);
          } catch (CapabilityNotDefinedException e) {
             logger.warn(e);
             continue;
@@ -159,37 +147,6 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
       return capabilitiesMap;
    }
 
-   @Override
-   public DeviceInfo getDeviceInfo(RequestInfo requestInfo) {
-      Device device = wurflHolder.getWURFLManager().getDeviceForRequest(requestInfo.getUserAgent());
-      DeviceInfo deviceInfo = new DeviceInfo();
-      try {
-         deviceInfo.setBrand_name(device.getCapability("brand_name"));
-         deviceInfo.setModel_name(device.getCapability("model_name"));
-         deviceInfo.setDevice_id(device.getId());  
-         deviceInfo.setUser_agent(requestInfo.getUserAgent());
-         deviceInfo.setMax_image_width(
-               Integer.valueOf(device.getCapability("max_image_width")).intValue());
-         deviceInfo.setXhtml_display_accesskey(
-               Boolean.valueOf(device.getCapability("xhtml_display_accesskey")).booleanValue());
-         deviceInfo.setXhtml_make_phone_call_string(device.getCapability("xhtml_make_phone_call_string"));
-         deviceInfo.setLast_modified(getStatusInfo().getLast_modified());
-         deviceInfo.setXhtml_support_level(
-               Integer.valueOf(device.getCapability("xhtml_support_level")).intValue());
-         deviceInfo.setResolution_width(
-               Integer.valueOf(device.getCapability("resolution_width")).intValue());
-         deviceInfo.setResolution_height(
-               Integer.valueOf(device.getCapability("resolution_height")).intValue());
-         deviceInfo.setPointing_method(device.getCapability("pointing_method"));
-         deviceInfo.setMobile_browser(device.getCapability("mobile_browser"));
-         
-      } catch (CapabilityNotDefinedException e) {
-         logger.warn(e);
-      }
-      
-      return deviceInfo;
-   }
-   
    @Override
    public StatusInfo getStatusInfo() {
       return this.statusInfo;

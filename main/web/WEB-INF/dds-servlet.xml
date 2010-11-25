@@ -11,7 +11,7 @@
 
   <!-- controllers -->
   <bean id="capabilityServiceController" class="nz.net.catalyst.mobile.mdl.device.CapabilityServiceController">
-    <property name="capabilityService" ref="wurflCapabilityService"/>
+    <property name="capabilityService" ref="capabilityService"/>
     <property name="objectDeSerializer" ref="objectDeSerializer"/>
 	</bean>  
 

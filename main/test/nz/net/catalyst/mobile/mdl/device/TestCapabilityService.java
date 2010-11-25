@@ -20,6 +20,7 @@ package nz.net.catalyst.mobile.mdl.device;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -28,6 +29,8 @@ import nz.net.catalyst.mobile.mdl.device.RequestInfo;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class TestCapabilityService extends TestCase {
     private ApplicationContext ac;
@@ -45,38 +48,10 @@ public class TestCapabilityService extends TestCase {
       HashMap<String, String> headers = new HashMap<String, String> ();
       headers.put("user-agent", userAgent);
       RequestInfo requestInfo = new RequestInfo(headers);
-      assertEquals(true, cs.getDeviceInfo(requestInfo).getXhtml_make_phone_call_string().equals("wtai://wp/mc;"));
+      @SuppressWarnings("unchecked")
+      Map<String, Object> capabilitiesMap = cs.getCapabilitiesForDevice(requestInfo, Arrays.asList(new String[] {"xhtml_make_phone_call_string"}));
+      String result = (String) capabilitiesMap.get("xhtml_make_phone_call_string");
+      assertEquals("wtai://wp/mc;", result);
    }
    
-   public void testInternetExplorer() {
-      String userAgent = "Treo850/v0100 Mozilla/4.0 (compatible; MSIE 6.0; Windows CE; IEMobile 7.11)";
-      String uaPixels = "320x320";
-      CapabilityService cs = (CapabilityService) ac.getBean("internetExplorerCapabilityService");
-      HashMap<String, String> headers = new HashMap<String, String> ();
-      headers.put("user-agent", userAgent);
-      headers.put("UA-pixels", uaPixels);
-      RequestInfo requestInfo = new RequestInfo(headers);
-      assertEquals(320, cs.getDeviceInfo(requestInfo).getMax_image_width());
-      
-      cs = (CapabilityService) ac.getBean("wurflCapabilityService");
-      assertEquals(300, cs.getDeviceInfo(requestInfo).getMax_image_width());
-      
-   }
-   
-   public void testOperaMini() {
-
-      String userAgent = "Opera/9.60 (J2ME/MIDP; Opera Mini/4.2.13337/608; U; en) Presto/2.2.0";
-      String operaMiniUA = "Mozilla/5.0 (SymbianOS/9.2; U; Series60/3.1 NokiaN95_8GB/30.0.018; Profile/MIDP-2.0 Configuration/CLDC-1.1 ) AppleWebKit/413 (KHTML, like Gecko) Safari/413";
-      CapabilityService cs = (CapabilityService) ac.getBean("operaMiniCapabilityService");
-
-      HashMap<String, String> headers = new HashMap<String, String> ();
-      headers.put("user-agent", userAgent);
-      headers.put("X-OperaMini-Phone-UA", operaMiniUA);
-      RequestInfo requestInfo = new RequestInfo(headers);
-      assertEquals(234, cs.getDeviceInfo(requestInfo).getMax_image_width());
-
-      cs = (CapabilityService) ac.getBean("wurflCapabilityService");
-      assertEquals(165, cs.getDeviceInfo(requestInfo).getMax_image_width());
-
-   }
 }

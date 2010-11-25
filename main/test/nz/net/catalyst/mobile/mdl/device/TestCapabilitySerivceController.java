@@ -21,10 +21,12 @@ package nz.net.catalyst.mobile.mdl.device;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -48,21 +50,17 @@ public class TestCapabilitySerivceController  extends TestCase {
    }
    
    public void testRequiredParams() throws Exception {
-      csController.get_deviceinfo(request, response);
-      String content = response.getContentAsString();
-      assertEquals("ERROR: Missing required parameter 'headers'", content);
-      
       request = new MockHttpServletRequest();
       response = new MockHttpServletResponse();
-      csController.get_capability(request, response);
-      content = response.getContentAsString();
+      csController.get_capabilities(request, response);
+      String content = response.getContentAsString();
       assertEquals("ERROR: Missing required parameter 'headers'", content);
       
 
       request = new MockHttpServletRequest();
       response = new MockHttpServletResponse();
       request.setParameter("headers", "some headers");
-      csController.get_capability(request, response);
+      csController.get_capabilities(request, response);
       content = response.getContentAsString();
       assertEquals("ERROR: Missing required parameter 'capability'", content);
       
@@ -74,11 +72,12 @@ public class TestCapabilitySerivceController  extends TestCase {
       ByteArrayOutputStream outStream = new ByteArrayOutputStream();
       mapper.writeValue(outStream, headers);
       request.setParameter("headers", outStream.toString());
+      request.setParameter("capability", "model_name");
            
-      csController.get_deviceinfo(request, response);
+      csController.get_capabilities(request, response);
       String content = response.getContentAsString();
-      DeviceInfo deviceInfo = mapper.readValue(content, DeviceInfo.class);
-      assertEquals("E71", deviceInfo.getModel_name());
+      Map<String, Object> capabilityMap = mapper.readValue(content, new TypeReference<Map<String, Object>> () {});
+      assertEquals("E71", capabilityMap.get("model_name"));
       
    }
 
@@ -88,8 +87,9 @@ public class TestCapabilitySerivceController  extends TestCase {
       ByteArrayOutputStream outStream = new ByteArrayOutputStream();
       mapper.writeValue(outStream, headers);
       request.setParameter("headers", "corrupted string" + outStream.toString());
+      request.setParameter("capability", "model_name");
            
-      csController.get_deviceinfo(request, response);
+      csController.get_capabilities(request, response);
       String content = response.getContentAsString();
       assertTrue(content.contains("ERROR: Parsing problem:"));
       
@@ -101,8 +101,9 @@ public class TestCapabilitySerivceController  extends TestCase {
       ByteArrayOutputStream outStream = new ByteArrayOutputStream();
       mapper.writeValue(outStream, headers);
       request.setParameter("headers", outStream.toString());
+      request.setParameter("capability", "model_name");
            
-      csController.get_deviceinfo(request, response);
+      csController.get_capabilities(request, response);
       String content = response.getContentAsString();
       assertTrue(content.contains("ERROR: Parsing problem: required http header 'user-agent' is missing"));
       
