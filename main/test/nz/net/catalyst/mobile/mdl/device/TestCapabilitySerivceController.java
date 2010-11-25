@@ -44,7 +44,7 @@ public class TestCapabilitySerivceController  extends TestCase {
    public void setUp() throws IOException {
       request = new MockHttpServletRequest();
       response = new MockHttpServletResponse();
-      ApplicationContext ac = new FileSystemXmlApplicationContext("site/test/mdl-context.xml");
+      ApplicationContext ac = new FileSystemXmlApplicationContext("main/test/mdl-context.xml");
       
       csController = (CapabilityServiceController) ac.getBean("capabilityServiceController");
    }

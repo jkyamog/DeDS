@@ -36,14 +36,14 @@ public class TestCapabilityService extends TestCase {
     private ApplicationContext ac;
 
    public void setUp() throws IOException {
-       ac = new FileSystemXmlApplicationContext("site/test/mdl-context.xml");
+       ac = new FileSystemXmlApplicationContext("main/test/mdl-context.xml");
 
    }
 
    public void testGetPrefix() {
 
       String userAgent = "NokiaN90-1/2.0523.1.4 Series60/2.8 Profile/MIDP-2.0 Configuration/CLDC-1.1";
-      CapabilityService cs = (CapabilityService) ac.getBean("wurflCapabilityService");
+      CapabilityService cs = (CapabilityService) ac.getBean("capabilityService");
       // Expect true
       HashMap<String, String> headers = new HashMap<String, String> ();
       headers.put("user-agent", userAgent);
