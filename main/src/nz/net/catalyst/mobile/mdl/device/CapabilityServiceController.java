@@ -101,11 +101,13 @@ public class CapabilityServiceController extends MultiActionController {
       StatusInfo status = capabilityService.getStatusInfo();
       mav.addObject("statusinfo", status);
       
-      Map<String, Object> capabilitiesMap = capabilityService.getCapabilitiesForDevice(RequestInfo.getRequestInfo(request),
+      RequestInfo requestInfo = RequestInfo.getRequestInfo(request);
+      mav.addObject("useragent", requestInfo.getUserAgent());
+      
+      Map<String, Object> capabilitiesMap = capabilityService.getCapabilitiesForDevice(requestInfo,
             Arrays.asList(new String[] {"brand_name", 
                                        "model_name", 
                                        "device_id", 
-                                       "user_agent",
                                        "max_image_width",
                                        "resolution_width",
                                        "resolution_height",
@@ -117,7 +119,7 @@ public class CapabilityServiceController extends MultiActionController {
       
       StringBuilder deviceStr = new StringBuilder();
       for (Entry<String, Object> capability: capabilitiesMap.entrySet()) {
-         deviceStr.append(capability.getKey() + " = " + capability.getValue() + "<br>");
+         deviceStr.append(capability.getKey() + "=" + capability.getValue() + "<br>");
       }
       
       mav.addObject("device", deviceStr);

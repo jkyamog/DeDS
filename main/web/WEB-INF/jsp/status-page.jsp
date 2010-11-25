@@ -9,6 +9,7 @@
 </jsp:useBean>
 <p>Data Last Modified: <fmt:formatDate value="${date}" type="both" pattern="dd-MMM-yyyy HH:mm:ss"/></p>
 <p>Last Error: ${statusinfo.last_error}</p>
+<p>User Agent: ${useragent}</p>
 <p>Device Info: ${device}</p>
 </body>
 </html>

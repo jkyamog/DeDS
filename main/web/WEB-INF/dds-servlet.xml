@@ -19,7 +19,7 @@
   <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
     <property name="mappings">
       <value>
-        services/**=capabilityServiceController
+        services/v1/**=capabilityServiceController
       </value>
     </property>
   </bean>

@@ -122,8 +122,6 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
          try {
             if ("device_id".equals(capability))
                capabilityStr = device.getId();
-            else if ("user_agent".equals(capability))
-               capabilityStr = requestInfo.getUserAgent();
             else
                capabilityStr = device.getCapability(capability);
          } catch (CapabilityNotDefinedException e) {
