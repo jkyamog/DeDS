@@ -12,7 +12,7 @@ use JSON;
 use Data::Dumper;
 use LWP::Simple;
 
-$dds_url = 'http://localhost:8080/dds/services';
+$dds_url = 'http://localhost:8080/dds/services/v1';
 
 $json = JSON->new->allow_nonref;
 
@@ -21,12 +21,10 @@ $headers->{'User-Agent'} = 'Mozilla/5.0 (SymbianOS/9.3; U; Series60/3.2 NokiaE75
 
 $encoded_header = $json->encode($headers);
 
-# get one capability, the screen size width
-$resolution_width = $json->decode(get $dds_url.'/get_capability?headers='.$encoded_header.'&capability=resolution_width');
-print "resolution_width = $resolution_width\n";
+# get the capabilities
+$json_response = get $dds_url.'/get_capabilities?headers='.$encoded_header.'&capability=resolution_width&capability=model_name&capability=xhtml_support_level';
 
 # get device info object, where it contains most used capabilities
-$encoded_deviceinfo = get $dds_url.'/get_deviceinfo?headers='.$encoded_header;
-$deviceinfo = $json->decode($encoded_deviceinfo);
-print Dumper $deviceinfo;
+$capabilities = $json->decode($json_response);
+print Dumper $capabilities;
 

@@ -7,7 +7,8 @@ header.  The client does not need to send all http headers, there
 are some headers that maybe sensitive due to security.  Some SSO solutions use 
 proprietary headers.  The more headers is sent over, the better chances of
 detecting the device.  Headers such as but not limited to: UA-Pixels, 
-X-OperaMini-Phone-UA, Accept helps in making better device detection.
+X-OperaMini-Phone-UA, Accept helps in making better device detection in the
+future.
 
 The web service uses just plain http get and json for encoding object/data.
 This should be simple and straight forward for most languages and platforms.  
@@ -15,32 +16,20 @@ It uses mainly the wurfl open source project to do the detection.
 
 [AVAILABLE METHODS]
 
-- get_deviceinfo - 
-Returns a device info object that has capabilities that is mostly
-use for development.  This is the best method to use, as it reduces back and 
-forth traffic through the web service.  1 service call give you about 10 most 
-used capabilities.
+- get_capabilities - 
+Returns a value for a particular capability of the device. Pass in many
+capability, service will return a map of where capability will be the key
+and information of the device on the value.
 
 parameters:
 header - hash map of http header key value pairs that is json encoded
-
-url:
-dds_url/get_deviceinfo?header=[json encoded header]
-
-- get_capability - 
-Returns a value for a particular capability of the device, normally
-used when device info does not have the needed capability.  1 service call give 
-you only 1 capability.  If such a capability becomes popular for develoment, 
-its likely it will be availble on get_deviceinfo eventually.
-
-parameters:
-header - hash map of http header key value pairs that is json encoded
-capability - string name of the capability key (ex. resolution_width).  For a 
-complete name of capability keys wurfl docs:  
+capability - string name of the capability key (ex. resolution_width).  
+1 or more capability http param is allowed
+For a complete name of capability keys wurfl docs:  
 http://wurfl.sourceforge.net/help_doc.php
 
 url:
-dds_url/get_capability?header=[json encoded header]&capability=[capability key/name]
+dds_url/get_capabilities?header=[json encoded header]&capability=[capability key/name]
 
 - get_statusinfo - 
 Returns an object of the status of the webservice.  status info
