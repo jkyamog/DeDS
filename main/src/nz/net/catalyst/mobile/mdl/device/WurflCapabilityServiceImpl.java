@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.ServletContext;
 
@@ -51,10 +53,15 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
    
    private final static String WURFL_FILENAME = "wurfl.xml";
 
-   private WURFLHolder wurflHolder;
+   // the variables below is declared as volatile to guarentee read consistency
+   // across threads, writing is done inside a ReentrantLock
+   // we only do the write on a single thread, see reloadWurfl method
+   private volatile WURFLHolder wurflHolder; 
+   private volatile StatusInfo statusInfo;
+   private Lock wurflReloadLock = new ReentrantLock();
+
    private ServletContext servletContext;
-   private FilesystemAlterationMonitor fam;
-   private StatusInfo statusInfo;
+   private List<FilesystemAlterationMonitor> famList = new ArrayList<FilesystemAlterationMonitor> ();
 
    private String wurflDirPath;
    private File wurflFile;
@@ -101,13 +108,13 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
       // initialize wurfl holder
       this.wurflHolder = new CustomWURFLHolder(this.wurflFile, this.wurflPatchFiles);
       
-      watchWurflFile();
+      startWatchingFiles();
       this.statusInfo = getNewStatusInfo("");
    }
    
    public void cleanup() {
       logger.info("stopping watching wurfl");
-      fam.stop();
+      stopWatchingFiles();
    }
    
    @Override
@@ -163,43 +170,60 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
       return statusInfo;
       
    }
-   
+
    /**
     * create listeners and monitors for wurfl and its patches
     */
-   protected void watchWurflFile() {
+   protected synchronized void startWatchingFiles() {
+      famList.clear();
 
-      fam = new FilesystemAlterationMonitor();
+      FilesystemAlterationMonitor fam = new FilesystemAlterationMonitor();
       FileChangeListener wurflListener = new WurflFileListener();
       fam.addListener(wurflFile, wurflListener);
+      fam.start();
+      famList.add(fam);
       logger.debug("watching " + wurflFile.getAbsolutePath());
-      
-      for (File patchFile:wurflPatchFiles) {
+
+      for (File patchFile : wurflPatchFiles) {
+         fam = new FilesystemAlterationMonitor();
          FileChangeListener wurflPatchListener = new WurflFileListener();
          fam.addListener(patchFile, wurflPatchListener);
+         fam.start();
+         famList.add(fam);
          logger.debug("watching " + patchFile.getAbsolutePath());
       }
-      
-      fam.start();
+
    }
 
-   protected synchronized void reloadWurfl() {
-      fam.stop(); // stop watching the file, so we dont keep on calling the callback it while reload is happening
+   protected synchronized void stopWatchingFiles() {
+      for (FilesystemAlterationMonitor fam : famList)
+         fam.stop();
+   }
+
+   protected void reloadWurfl() {
+      if (!wurflReloadLock.tryLock()) {
+         logger.warn("unable to obtain wurflReloadLock, not reloading");
+         return;
+      }
+
+      stopWatchingFiles(); // stop watching the files, so we dont keep on
+                           // calling the callback it while reload is
+                           // happening
       try {
          WURFLHolder tempWurflHolder = new CustomWURFLHolder(this.wurflFile, this.wurflPatchFiles);
          wurflHolder = tempWurflHolder;
          this.statusInfo = getNewStatusInfo("");
-         logger.debug("reload successful");
+         logger.info("reload successful");
       } catch (Exception e) {
          logger.error("error in reloading wurfl", e);
          String errorMessage = (e.getCause() != null) ? e.getCause().getMessage() : e.getMessage();
          this.statusInfo = getNewStatusInfo(errorMessage);
       } finally {
-         watchWurflFile();
+         startWatchingFiles();
+         wurflReloadLock.unlock();
       }
    }
 
-   
    public void setWurflDirPath(String wurflDirPath) {
       this.wurflDirPath = wurflDirPath;
    }
@@ -215,7 +239,7 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
       public void onFileChange(File pFile) {
          super.onFileChange(pFile);
          if (hasChanged()) {
-            logger.info("wurfl file changed, reloading"); 
+            logger.info(pFile.getAbsolutePath() + " file changed, reloading"); 
             reloadWurfl();
          }
       }
