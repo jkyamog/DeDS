@@ -216,7 +216,11 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
          logger.info("reload successful");
       } catch (Exception e) {
          logger.error("error in reloading wurfl", e);
-         String errorMessage = (e.getCause() != null) ? e.getCause().getMessage() : e.getMessage();
+         String errorMessage = "Unknown error";
+         if (e.getCause() != null && e.getCause().getMessage() != null)
+            errorMessage = e.getCause().getMessage(); 
+         else if (e.getMessage() != null) 
+            errorMessage = e.getMessage();
          this.statusInfo = getNewStatusInfo(errorMessage);
       } finally {
          startWatchingFiles();
