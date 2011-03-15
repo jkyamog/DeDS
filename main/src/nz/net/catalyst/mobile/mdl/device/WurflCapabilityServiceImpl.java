@@ -202,7 +202,7 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
 
    protected void reloadWurfl() {
       if (!wurflReloadLock.tryLock()) {
-         logger.warn("unable to obtain wurflReloadLock, not reloading");
+         logger.warn("unable to obtain wurflReloadLock another thread be in the process of reloading, not reloading");
          return;
       }
 
