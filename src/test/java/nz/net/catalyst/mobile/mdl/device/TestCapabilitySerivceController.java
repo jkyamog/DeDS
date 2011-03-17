@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -44,7 +44,7 @@ public class TestCapabilitySerivceController  extends TestCase {
    public void setUp() throws IOException {
       request = new MockHttpServletRequest();
       response = new MockHttpServletResponse();
-      ApplicationContext ac = new FileSystemXmlApplicationContext("main/test/mdl-context.xml");
+      ApplicationContext ac = new ClassPathXmlApplicationContext("mdl-context.xml");
       
       csController = (CapabilityServiceController) ac.getBean("capabilityServiceController");
    }

@@ -29,13 +29,13 @@ import nz.net.catalyst.mobile.mdl.device.CapabilityService;
 import nz.net.catalyst.mobile.mdl.device.RequestInfo;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class TestCapabilityService extends TestCase {
     private ApplicationContext ac;
 
    public void setUp() throws IOException {
-       ac = new FileSystemXmlApplicationContext("main/test/mdl-context.xml");
+       ac = new ClassPathXmlApplicationContext("mdl-context.xml");
 
    }
 
