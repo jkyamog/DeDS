@@ -19,8 +19,6 @@
 package nz.net.catalyst.mobile.mdl.device;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.ParseException;
 
 /**
@@ -30,10 +28,10 @@ import java.text.ParseException;
  *
  */
 
-public interface ObjectDeSerializer {
+public interface JsonService {
    
-   public <T> T deserialize(InputStream inputStream) throws IOException, ParseException;
+   public <T> T deserialize(String jsonString) throws IOException, ParseException;
    
-   public void serialize(Object object, OutputStream outputStream) throws IOException, ParseException;
+   public String serialize(Object object) throws IOException, ParseException;
 
 }

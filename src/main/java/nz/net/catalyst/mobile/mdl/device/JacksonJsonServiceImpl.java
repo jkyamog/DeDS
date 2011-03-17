@@ -19,8 +19,6 @@
 package nz.net.catalyst.mobile.mdl.device;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.ParseException;
 
 import org.apache.commons.logging.Log;
@@ -38,19 +36,19 @@ import org.codehaus.jackson.type.TypeReference;
  *
  */
 
-public class JsonDeSerializerImpl
-      implements ObjectDeSerializer {
+public class JacksonJsonServiceImpl
+      implements JsonService {
 
    private static ObjectMapper mapper = new ObjectMapper();
    
-   private final static Log logger = LogFactory.getLog(JsonDeSerializerImpl.class);
+   private final static Log logger = LogFactory.getLog(JacksonJsonServiceImpl.class);
 
    @Override
-   public <T> T deserialize(InputStream inputStream) 
+   public <T> T deserialize(String jsonSring) 
       throws IOException, ParseException {
       
       try {
-         return JsonDeSerializerImpl.mapper.<T>readValue(inputStream, new TypeReference<T>() {});
+         return JacksonJsonServiceImpl.mapper.<T>readValue(jsonSring, new TypeReference<T>() {});
          
       } catch (JsonParseException e) {
          logger.warn("unable to parse headers", e);
@@ -61,11 +59,12 @@ public class JsonDeSerializerImpl
       }
    }
 
-   public void serialize(Object object, OutputStream outputStream)       
+   @Override
+   public String serialize(Object object)       
       throws IOException, ParseException {
 
       try {
-         mapper.writeValue(outputStream, object);
+         return mapper.writeValueAsString(object);
       } catch (JsonGenerationException e) {
          logger.warn("unable to serialize", e);
          throw new ParseException(e.getMessage(),0);

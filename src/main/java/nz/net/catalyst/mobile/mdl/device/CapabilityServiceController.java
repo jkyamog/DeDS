@@ -26,57 +26,59 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * a controller that gives our capability service interface as a simple webservice.
  * functions is what are on the urls.  it then gets the http parameters, uses
  * a serialize and deserializer service to turn to and from objects.
  * 
- * note: methods are lowercase and underscores and not camelcase, as these become
- * urls
- *  
  * @author jun yamog
  *
  */
-public class CapabilityServiceController extends MultiActionController {
+
+@Controller
+@RequestMapping("/services/v1")
+public class CapabilityServiceController {
 
    public static final String CAPABILITY = "capability";
    public static final String HEADERS = "headers";
 
-   private final static Log logger = LogFactory.getLog(CapabilityServiceController.class);
+   private final static Logger logger = LoggerFactory.getLogger(CapabilityServiceController.class);
    
-   private ObjectDeSerializer objectDeSerializer;
+   @Autowired
+   private JsonService jsonService;
+   @Autowired
    private CapabilityService capabilityService;
    
-
-   public void get_capabilities(HttpServletRequest request, HttpServletResponse response) throws Exception {
-      String headersStr = request.getParameter(HEADERS);
-      String[] capabilities = request.getParameterValues(CAPABILITY);
+   @RequestMapping("get_capabilities")
+   public @ResponseBody String getCpabilities(@RequestParam(value=HEADERS) String headersStr,
+         @RequestParam(value=CAPABILITY) String[] capabilities) throws Exception {
       
       if (StringUtils.isEmpty(headersStr)) {
-         response.getWriter().print("ERROR: Missing required parameter '" + HEADERS + "'");
-         return;
+         return "ERROR: Missing required parameter '" + HEADERS + "'";
       }
       if (capabilities == null || capabilities.length == 0) {
-         response.getWriter().print("ERROR: Missing required parameter '" + CAPABILITY + "'");
-         return;
+         return "ERROR: Missing required parameter '" + CAPABILITY + "'";
       }
 
       try {
-         Map<String, String> headers = objectDeSerializer.deserialize(IOUtils.toInputStream(headersStr));
+         Map<String, String> headers = jsonService.deserialize(headersStr);
    
          Map<String, Object> capabilitiesMap = capabilityService.getCapabilitiesForDevice(new RequestInfo(headers), Arrays.asList(capabilities));
-         objectDeSerializer.serialize(capabilitiesMap, response.getOutputStream());
+         return jsonService.serialize(capabilitiesMap);
       } catch (ParseException e) {
-         response.getWriter().print("ERROR: Parsing problem: " + e.getMessage());
+         return "ERROR: Parsing problem: " + e.getMessage();
       } catch (IllegalArgumentException e) {
-         response.getWriter().print("ERROR: Parsing problem: " + e.getMessage());
+         return "ERROR: Parsing problem: " + e.getMessage();
       } catch (Exception e) {
          logger.error("Unknown problem w/ service", e);
          throw e;
@@ -84,25 +86,26 @@ public class CapabilityServiceController extends MultiActionController {
       
    }
    
-   public void get_statusinfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
+   @RequestMapping("get_statusinfo")
+   public @ResponseBody String getStatusInfo() throws Exception {
       StatusInfo status = capabilityService.getStatusInfo();
        
       try {
-         objectDeSerializer.serialize(status, response.getOutputStream());
+         return jsonService.serialize(status);
       } catch (Exception e) {
          logger.error("Unknown problem w/ service", e);
          throw e;
       }
    }
    
-   public ModelAndView status_page(HttpServletRequest request, HttpServletResponse response) {
-      ModelAndView mav = new ModelAndView();
+   @RequestMapping("status_page")
+   public String getStatusPage(HttpServletRequest request, HttpServletResponse response, Model model) {
 
       StatusInfo status = capabilityService.getStatusInfo();
-      mav.addObject("statusinfo", status);
+      model.addAttribute("statusinfo", status);
       
       RequestInfo requestInfo = RequestInfo.getRequestInfo(request);
-      mav.addObject("useragent", requestInfo.getUserAgent());
+      model.addAttribute("useragent", requestInfo.getUserAgent());
       
       Map<String, Object> capabilitiesMap = capabilityService.getCapabilitiesForDevice(requestInfo,
             Arrays.asList(new String[] {"brand_name", 
@@ -122,19 +125,9 @@ public class CapabilityServiceController extends MultiActionController {
          deviceStr.append(capability.getKey() + "=" + capability.getValue() + "<br>");
       }
       
-      mav.addObject("device", deviceStr);
+      model.addAttribute("device", deviceStr);
       
-      mav.setViewName("status-page");
-      return mav;
-   }
-
-
-   public void setObjectDeSerializer(ObjectDeSerializer objectDeSerializer) {
-      this.objectDeSerializer = objectDeSerializer;
-   }
-
-   public void setCapabilityService(CapabilityService capablityService) {
-      this.capabilityService = capablityService;
+      return "status-page";
    }
 
 

@@ -18,31 +18,30 @@
 
 package nz.net.catalyst.mobile.mdl.device;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 import nz.net.catalyst.mobile.mdl.device.CapabilityService;
 import nz.net.catalyst.mobile.mdl.device.RequestInfo;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-public class TestCapabilityService extends TestCase {
-    private ApplicationContext ac;
+@ContextConfiguration(locations={"classpath:mdl-context.xml"})
+public class TestCapabilityService extends AbstractJUnit4SpringContextTests {
+   
+   @Autowired
+   CapabilityService cs;
 
-   public void setUp() throws IOException {
-       ac = new ClassPathXmlApplicationContext("mdl-context.xml");
-
-   }
-
+   @Test
    public void testGetPrefix() {
 
       String userAgent = "NokiaN90-1/2.0523.1.4 Series60/2.8 Profile/MIDP-2.0 Configuration/CLDC-1.1";
-      CapabilityService cs = (CapabilityService) ac.getBean("capabilityService");
       // Expect true
       HashMap<String, String> headers = new HashMap<String, String> ();
       headers.put("user-agent", userAgent);

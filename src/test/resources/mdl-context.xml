@@ -7,6 +7,7 @@
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
+  <context:annotation-config/>
             
   <context:property-placeholder location="mdl.properties"/>
 
@@ -14,11 +15,8 @@
      <property name="wurflDirPath" value="${mdl.wurflDirPath}"/>
   </bean>
 
-  <bean id="objectDeSerializer" class="nz.net.catalyst.mobile.mdl.device.JsonDeSerializerImpl"/>
+  <bean id="jsonService" class="nz.net.catalyst.mobile.mdl.device.JacksonJsonServiceImpl"/>
   
-  <bean id="capabilityServiceController" class="nz.net.catalyst.mobile.mdl.device.CapabilityServiceController">
-    <property name="capabilityService" ref="capabilityService"/>
-    <property name="objectDeSerializer" ref="objectDeSerializer"/>
-  </bean>  
+  <bean id="capabilityServiceController" class="nz.net.catalyst.mobile.mdl.device.CapabilityServiceController"/>
 
 </beans>
