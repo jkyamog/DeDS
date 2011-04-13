@@ -31,7 +31,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 @ContextConfiguration(locations={"classpath:mdl-context.xml"})
-public class TestCapabilitySerivceController  extends AbstractJUnit4SpringContextTests {
+public class CapabilitySerivceControllerTest  extends AbstractJUnit4SpringContextTests {
 
    @Autowired
    private CapabilityServiceController csController;
