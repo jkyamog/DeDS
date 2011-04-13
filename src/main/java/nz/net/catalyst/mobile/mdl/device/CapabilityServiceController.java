@@ -38,8 +38,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * a controller that gives our capability service interface as a simple webservice.
- * functions is what are on the urls.  it then gets the http parameters, uses
+ * functions is what are on the urls.  it then gets the http parameters, uses json
  * a serialize and deserializer service to turn to and from objects.
+ * 
+ * note: not yet using spring's response body to transform objects to json
+ * explicitly writing the json to the response as some client will not properly set
+ * the header Accept application/json
  * 
  * @author jun yamog
  *
