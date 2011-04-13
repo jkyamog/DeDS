@@ -206,9 +206,6 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
          return;
       }
 
-      stopWatchingFiles(); // stop watching the files, so we dont keep on
-                           // calling the callback it while reload is
-                           // happening
       try {
          WURFLHolder tempWurflHolder = new CustomWURFLHolder(this.wurflFile, this.wurflPatchFiles);
          wurflHolder = tempWurflHolder;
@@ -223,7 +220,6 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
             errorMessage = e.getMessage();
          this.statusInfo = getNewStatusInfo(errorMessage);
       } finally {
-         startWatchingFiles();
          wurflReloadLock.unlock();
       }
    }
