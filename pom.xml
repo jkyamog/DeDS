@@ -7,40 +7,40 @@
   <version>1.0.0</version>
   <name>DeDS - Device Detection Service</name>
   <url>http://gitorious.org/deds</url>
+  <properties>
+   <spring.version>3.0.5.RELEASE</spring.version>
+   <jmockit.version>0.999.4</jmockit.version>
+   <sl4j.version>1.6.1</sl4j.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>net.sourceforge.wurfl</groupId>
       <artifactId>wurfl</artifactId>
       <version>1.2.2</version>
-      <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>3.0.5.RELEASE</version>
-      <type>jar</type>
+      <version>${spring.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
       <version>2.6</version>
-      <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-jci-fam</artifactId>
       <version>1.0</version>
-      <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-jci-core</artifactId>
       <version>1.0</version>
-      <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -52,21 +52,25 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.6.1</version>
+      <version>${sl4j.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.8.2</version>
-      <type>jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>3.0.5.RELEASE</version>
-      <type>jar</type>
+      <version>${spring.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>mockit</groupId>
+      <artifactId>jmockit</artifactId>
+      <version>${jmockit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -78,8 +82,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.6.1</version>
-      <type>jar</type>
+      <version>${sl4j.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -95,9 +98,28 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.8</version>
+        <configuration>
+          <!-- need to set jmockit on -javaagent arg, so it loads first before junit.jar -->
+          <argLine>-javaagent:"${settings.localRepository}"/mockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar</argLine>
         </configuration>
       </plugin>
     </plugins>
@@ -108,5 +130,9 @@
   		<name>WURFL-Pro Public Repository</name>
   		<url>http://dev.wurflpro.com/nexus/content/repositories/public-releases/</url>
 	 </repository>
+	 <repository>
+      <id>r.j.o-groups-public</id>
+      <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+    </repository>
   </repositories>
 </project>
