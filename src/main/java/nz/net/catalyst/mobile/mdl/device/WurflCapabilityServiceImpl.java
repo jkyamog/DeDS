@@ -30,8 +30,8 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.jci.listeners.FileChangeListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ServletContextAware;
 
 import net.sourceforge.wurfl.core.CapabilityNotDefinedException;
@@ -49,7 +49,7 @@ import net.sourceforge.wurfl.core.WURFLHolder;
 
 public class WurflCapabilityServiceImpl implements CapabilityService, ServletContextAware {
    
-   private final static Log logger = LogFactory.getLog(WurflCapabilityServiceImpl.class);
+   private final Logger logger = LoggerFactory.getLogger(this.getClass());
    
    private final static String WURFL_FILENAME = "wurfl.xml";
 
@@ -132,7 +132,7 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
             else
                capabilityStr = device.getCapability(capability);
          } catch (CapabilityNotDefinedException e) {
-            logger.warn(e);
+            logger.warn("capability = " + capability + " does not exists");
             continue;
          }
          

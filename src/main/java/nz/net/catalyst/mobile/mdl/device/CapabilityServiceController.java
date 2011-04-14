@@ -56,7 +56,7 @@ public class CapabilityServiceController {
    public static final String CAPABILITY = "capability";
    public static final String HEADERS = "headers";
 
-   private final static Logger logger = LoggerFactory.getLogger(CapabilityServiceController.class);
+   private final Logger logger = LoggerFactory.getLogger(this.getClass());
    
    @Autowired
    private JsonService jsonService;

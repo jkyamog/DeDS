@@ -27,8 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A bean that holds important info about the http request
@@ -41,8 +41,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class RequestInfo {
    
-   private static final Log logger = LogFactory.getLog(RequestInfo.class);
-   
+   private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
    public static final String REQUEST_INFO = "request-info";
    
    private Map<String, String> headers;

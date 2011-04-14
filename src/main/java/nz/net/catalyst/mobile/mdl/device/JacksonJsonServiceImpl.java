@@ -21,13 +21,13 @@ package nz.net.catalyst.mobile.mdl.device;
 import java.io.IOException;
 import java.text.ParseException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Serialize and deserialize objects using JSON and jackson project implementation
@@ -41,7 +41,7 @@ public class JacksonJsonServiceImpl
 
    private static ObjectMapper mapper = new ObjectMapper();
    
-   private final static Log logger = LogFactory.getLog(JacksonJsonServiceImpl.class);
+   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
    @Override
    public <T> T deserialize(String jsonSring) 
