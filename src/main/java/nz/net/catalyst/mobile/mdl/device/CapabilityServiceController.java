@@ -18,22 +18,26 @@
 
 package nz.net.catalyst.mobile.mdl.device;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * a controller that gives our capability service interface as a simple webservice.
@@ -63,29 +67,13 @@ public class CapabilityServiceController {
    private CapabilityService capabilityService;
    
    @RequestMapping("get_capabilities")
-   public @ResponseBody String getCpabilities(@RequestParam(value=HEADERS) String headersStr,
-         @RequestParam(value=CAPABILITY) String[] capabilities) throws Exception {
+   public @ResponseBody String getCapabilities(@RequestParam(value=HEADERS) String headersStr,
+         @RequestParam(value=CAPABILITY) String[] capabilities) throws IOException, ParseException {
       
-      if (StringUtils.isEmpty(headersStr)) {
-         return "ERROR: Missing required parameter '" + HEADERS + "'";
-      }
-      if (capabilities == null || capabilities.length == 0) {
-         return "ERROR: Missing required parameter '" + CAPABILITY + "'";
-      }
+      Map<String, String> headers = jsonService.deserialize(headersStr);
 
-      try {
-         Map<String, String> headers = jsonService.deserialize(headersStr);
-   
-         Map<String, Object> capabilitiesMap = capabilityService.getCapabilitiesForDevice(new RequestInfo(headers), Arrays.asList(capabilities));
-         return jsonService.serialize(capabilitiesMap);
-      } catch (ParseException e) {
-         return "ERROR: Parsing problem: " + e.getMessage();
-      } catch (IllegalArgumentException e) {
-         return "ERROR: Parsing problem: " + e.getMessage();
-      } catch (Exception e) {
-         logger.error("Unknown problem w/ service", e);
-         throw e;
-      }
+      Map<String, Object> capabilitiesMap = capabilityService.getCapabilitiesForDevice(new RequestInfo(headers), Arrays.asList(capabilities));
+      return jsonService.serialize(capabilitiesMap);
       
    }
    
@@ -93,12 +81,7 @@ public class CapabilityServiceController {
    public @ResponseBody String getStatusInfo() throws Exception {
       StatusInfo status = capabilityService.getStatusInfo();
        
-      try {
          return jsonService.serialize(status);
-      } catch (Exception e) {
-         logger.error("Unknown problem w/ service", e);
-         throw e;
-      }
    }
    
    @RequestMapping("status_page")
@@ -133,5 +116,41 @@ public class CapabilityServiceController {
       return "status-page";
    }
 
+   @ExceptionHandler(MissingServletRequestParameterException.class)
+   public ModelAndView handleMissingParameters(MissingServletRequestParameterException ex, HttpServletResponse response) {
+      ModelAndView mav = new ModelAndView();
+      mav.addObject("error_message", ex.getMessage());
+      
+      mav.setViewName("error");
+      response.setStatus(400);
+      
+      return mav;
+   }
+   
+   @ExceptionHandler({ParseException.class, IllegalArgumentException.class, ClassCastException.class})
+   public ModelAndView handleParseProblems(Exception ex, HttpServletResponse response) {
+      logger.warn("parse problems on input data", ex);
+      
+      ModelAndView mav = new ModelAndView();
+      mav.addObject("error_message", "parse problems on input data, Details: " + ex.getMessage());
+      
+      mav.setViewName("error");
+      response.setStatus(400);
+      
+      return mav;
+   }
+
+   @ExceptionHandler({Exception.class})
+   public ModelAndView handleUnknownException(Exception ex, HttpServletResponse response) {
+      logger.error("unknown exception", ex);
+      
+      ModelAndView mav = new ModelAndView();
+      mav.addObject("error_message", "unknown exception, Details: " + ex.getMessage());
+      
+      mav.setViewName("error");
+      response.setStatus(500);
+      
+      return mav;
+   }
 
 }

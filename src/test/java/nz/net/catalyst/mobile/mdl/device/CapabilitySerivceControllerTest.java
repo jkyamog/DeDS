@@ -20,6 +20,7 @@ package nz.net.catalyst.mobile.mdl.device;
 
 import static org.junit.Assert.*;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,10 +30,13 @@ import org.codehaus.jackson.type.TypeReference;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
 
 @ContextConfiguration(locations={"classpath:mdl-context.xml"})
 public class CapabilitySerivceControllerTest  extends AbstractJUnit4SpringContextTests {
@@ -40,16 +44,42 @@ public class CapabilitySerivceControllerTest  extends AbstractJUnit4SpringContex
    @Autowired
    private CapabilityServiceController csController;
    
+   @Autowired
+   private AnnotationMethodHandlerAdapter handlerAdapter;
+   
    private ObjectMapper mapper = new ObjectMapper();
 
    @Test
    public void testRequiredParams() throws Exception {
-      String content = csController.getCpabilities(null, null);
-      assertEquals("ERROR: Missing required parameter 'headers'", content);
+      MockHttpServletRequest request = new MockHttpServletRequest("GET", "/services/v1/get_capabilities");
+      MockHttpServletResponse response = new MockHttpServletResponse();
       
+      HashMap<String, String> headers = new HashMap<String, String> ();
+      headers.put("user-agent", "Mozilla/5.0 (SymbianOS/9.2; U; Series60/3.1 NokiaE71-1/100.07.57; Profile/MIDP-2.0 Configuration/CLDC-1.1 ) AppleWebKit/413 (KHTML, like Gecko) Safari/413");
+      String headersStr = mapper.writeValueAsString(headers);
 
-      content = csController.getCpabilities("some headers", null);
-      assertEquals("ERROR: Missing required parameter 'capability'", content);
+      request.addParameter("headers", headersStr);
+
+      try {
+         handlerAdapter.handle(request, response, csController);
+         fail("exception expected");
+      } catch (MissingServletRequestParameterException e) {
+         assertEquals("Required String[] parameter 'capability' is not present", e.getMessage());
+      }
+
+      request = new MockHttpServletRequest("GET", "/services/v1/get_capabilities");
+      request.addParameter("capability", "device_id");
+
+      try {
+         handlerAdapter.handle(request, response, csController);
+         fail("exception expected");
+      } catch (MissingServletRequestParameterException e) {
+         assertEquals("Required String parameter 'headers' is not present", e.getMessage());
+         csController.handleMissingParameters(e, response);
+         
+         assertEquals(400, response.getStatus());
+      }
+      
       
    }
    
@@ -59,7 +89,7 @@ public class CapabilitySerivceControllerTest  extends AbstractJUnit4SpringContex
       headers.put("user-agent", "Mozilla/5.0 (SymbianOS/9.2; U; Series60/3.1 NokiaE71-1/100.07.57; Profile/MIDP-2.0 Configuration/CLDC-1.1 ) AppleWebKit/413 (KHTML, like Gecko) Safari/413");
       String headersStr = mapper.writeValueAsString(headers);
            
-      String content = csController.getCpabilities(headersStr, new String[] {"model_name"});
+      String content = csController.getCapabilities(headersStr, new String[] {"model_name"});
       Map<String, Object> capabilityMap = mapper.readValue(content, new TypeReference<Map<String, Object>> () {});
       assertEquals("E71", capabilityMap.get("model_name"));
       
@@ -71,9 +101,14 @@ public class CapabilitySerivceControllerTest  extends AbstractJUnit4SpringContex
       headers.put("user-agent", "Mozilla/5.0 (SymbianOS/9.2; U; Series60/3.1 NokiaE71-1/100.07.57; Profile/MIDP-2.0 Configuration/CLDC-1.1 ) AppleWebKit/413 (KHTML, like Gecko) Safari/413");
       String headersStr = mapper.writeValueAsString(headers);
       
-      String content = csController.getCpabilities("corrupted string" + headersStr, new String[] {"model_name"});
-      assertTrue(content.contains("ERROR: Parsing problem:"));
-      
+      try {
+         csController.getCapabilities("corrupted string" + headersStr, new String[] {"model_name"});
+         fail("exception expected");
+      } catch (ParseException e) {
+         MockHttpServletResponse response = new MockHttpServletResponse();
+         csController.handleParseProblems(e, response);
+         assertEquals(400, response.getStatus());
+      }
    }
    
    @Test
@@ -82,8 +117,15 @@ public class CapabilitySerivceControllerTest  extends AbstractJUnit4SpringContex
       headers.put("user-agent-missing", "Mozilla/5.0 (SymbianOS/9.2; U; Series60/3.1 NokiaE71-1/100.07.57; Profile/MIDP-2.0 Configuration/CLDC-1.1 ) AppleWebKit/413 (KHTML, like Gecko) Safari/413");
       String headersStr = mapper.writeValueAsString(headers);
       
-      String content = csController.getCpabilities(headersStr, new String[] {"model_name"});
-      assertTrue(content.contains("ERROR: Parsing problem: required http header 'user-agent' is missing"));
+      try {
+         csController.getCapabilities(headersStr, new String[] {"model_name"});
+         fail("exception expected");
+      } catch (IllegalArgumentException e) {
+         assertEquals("required http header 'user-agent' is missing", e.getMessage());
+         MockHttpServletResponse response = new MockHttpServletResponse();
+         csController.handleParseProblems(e, response);
+         assertEquals(400, response.getStatus());
+      }
       
    }
    

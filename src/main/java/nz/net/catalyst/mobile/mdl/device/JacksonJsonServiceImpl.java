@@ -51,10 +51,10 @@ public class JacksonJsonServiceImpl
          return JacksonJsonServiceImpl.mapper.<T>readValue(jsonString, new TypeReference<T>() {});
          
       } catch (JsonParseException e) {
-         logger.warn("unable to parse headers", e);
+         logger.warn("unable to deserialize", e);
          throw new ParseException(e.getMessage(),0);
       } catch (JsonMappingException e) {
-         logger.warn("unable to parse headers", e);
+         logger.warn("unable to deserialize", e);
          throw new ParseException(e.getMessage(),0);
       }
    }

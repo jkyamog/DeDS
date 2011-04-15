@@ -18,5 +18,7 @@
   <bean id="jsonService" class="nz.net.catalyst.mobile.mdl.device.JacksonJsonServiceImpl"/>
   
   <bean id="capabilityServiceController" class="nz.net.catalyst.mobile.mdl.device.CapabilityServiceController"/>
+  
+  <bean id="handlerAdapater" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
 </beans>
