@@ -44,11 +44,11 @@ public class JacksonJsonServiceImpl
    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
    @Override
-   public <T> T deserialize(String jsonSring) 
+   public <T> T deserialize(String jsonString) 
       throws IOException, ParseException {
       
       try {
-         return JacksonJsonServiceImpl.mapper.<T>readValue(jsonSring, new TypeReference<T>() {});
+         return JacksonJsonServiceImpl.mapper.<T>readValue(jsonString, new TypeReference<T>() {});
          
       } catch (JsonParseException e) {
          logger.warn("unable to parse headers", e);

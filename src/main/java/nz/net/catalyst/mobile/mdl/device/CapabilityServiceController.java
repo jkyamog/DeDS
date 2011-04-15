@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -103,7 +102,7 @@ public class CapabilityServiceController {
    }
    
    @RequestMapping("status_page")
-   public String getStatusPage(HttpServletRequest request, HttpServletResponse response, Model model) {
+   public String getStatusPage(HttpServletRequest request, Model model) {
 
       StatusInfo status = capabilityService.getStatusInfo();
       model.addAttribute("statusinfo", status);

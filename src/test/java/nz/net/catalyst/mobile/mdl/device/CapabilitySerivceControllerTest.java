@@ -23,12 +23,16 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
 
 @ContextConfiguration(locations={"classpath:mdl-context.xml"})
 public class CapabilitySerivceControllerTest  extends AbstractJUnit4SpringContextTests {
@@ -81,6 +85,23 @@ public class CapabilitySerivceControllerTest  extends AbstractJUnit4SpringContex
       String content = csController.getCpabilities(headersStr, new String[] {"model_name"});
       assertTrue(content.contains("ERROR: Parsing problem: required http header 'user-agent' is missing"));
       
+   }
+   
+   @Test
+   public void testStatusInfo() throws Exception {
+      MockHttpServletRequest request = new MockHttpServletRequest();
+      Model model = new ExtendedModelMap();
+
+      request.addHeader("user-agent", "Mozilla/5.0 (SymbianOS/9.2; U; Series60/3.1 NokiaE71-1/100.07.57; Profile/MIDP-2.0 Configuration/CLDC-1.1 ) AppleWebKit/413 (KHTML, like Gecko) Safari/413");
+      
+      csController.getStatusPage(request, model);
+      
+      Map<String, Object> modelMap = model.asMap();
+      StatusInfo statusInfo = (StatusInfo) modelMap.get("statusinfo");
+      assertTrue(StringUtils.isBlank(statusInfo.getLast_error()));
+      
+      String statusInfoStr = csController.getStatusInfo();
+      assertEquals(statusInfoStr, mapper.writeValueAsString(statusInfo));
    }
 
 

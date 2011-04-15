@@ -9,7 +9,7 @@
   <url>http://gitorious.org/deds</url>
   <properties>
    <spring.version>3.0.5.RELEASE</spring.version>
-   <jmockit.version>0.999.4</jmockit.version>
+   <jmockit.version>0.999.8</jmockit.version>
    <sl4j.version>1.6.1</sl4j.version>
   </properties>
   <dependencies>
@@ -131,8 +131,9 @@
   		<url>http://dev.wurflpro.com/nexus/content/repositories/public-releases/</url>
 	 </repository>
 	 <repository>
-      <id>r.j.o-groups-public</id>
-      <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+      <id>jmockit-svn</id>
+      <url>http://jmockit.googlecode.com/svn/maven-repo</url>
+      <releases><checksumPolicy>ignore</checksumPolicy></releases>
     </repository>
   </repositories>
 </project>

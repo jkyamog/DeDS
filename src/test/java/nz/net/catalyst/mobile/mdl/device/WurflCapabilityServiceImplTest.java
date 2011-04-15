@@ -24,13 +24,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import mockit.Expectations;
+import mockit.Injectable;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
 
 public class WurflCapabilityServiceImplTest {
    
    WurflCapabilityServiceImpl wurflCS;
    
+   @Injectable
+   Logger logger;
    
    @Before
    public void setup() {
@@ -70,13 +76,49 @@ public class WurflCapabilityServiceImplTest {
    }
    
    @Test
-   public void testReload() {
-      wurflCS.setWurflDirPath("src/main/webapp/WEB-INF/wurfl");
+   public void testReloadAndCleanup() throws InterruptedException {
+      String wurflDirPath = "src/main/webapp/WEB-INF/wurfl";
+      final File wurflDir = new File(wurflDirPath);
+
+      new Expectations() {
+         {
+            setField(wurflCS, "logger", logger);
+
+            // these are the correct logs that should happen, note there are some concurrency happening
+            // so the test below added some Thread sleep for the proper events to happen in
+            // consistent sequence
+            logger.info("search for wurfl file and patches on: " + wurflDir.getAbsolutePath());
+            logger.debug("wurfl file: " + wurflDir.getAbsolutePath() + "/wurfl.xml");
+            logger.debug("wurfl patch file: " + wurflDir.getAbsolutePath() + "/wurfl_patch.xml");
+            logger.debug("wurfl patch file: " + wurflDir.getAbsolutePath() + "/web_browsers_patch.xml");
+            logger.debug("watching " + wurflDir.getAbsolutePath() + "/wurfl.xml");
+            logger.debug("watching " + wurflDir.getAbsolutePath() + "/wurfl_patch.xml");
+            logger.debug("watching " + wurflDir.getAbsolutePath() + "/web_browsers_patch.xml");
+            logger.info(wurflDir.getAbsolutePath() + "/wurfl.xml file changed, reloading");
+            logger.info(wurflDir.getAbsolutePath() + "/wurfl_patch.xml file changed, reloading");
+            logger.warn("unable to obtain wurflReloadLock another thread be in the process of reloading, not reloading");
+            logger.info("reload successful");
+            logger.info("stopping watching wurfl");
+
+         }
+      };
+      
+      wurflCS.setWurflDirPath(wurflDirPath);
       wurflCS.init();
       
       File wurflFile = new File("src/main/webapp/WEB-INF/wurfl/wurfl.xml");
       wurflFile.setLastModified((new Date()).getTime());
       
+      // need to wait for reload to finish
+      System.out.println("waiting for reload to finish...");
+      Thread.sleep(5000);
+      File wurflFilePatch = new File("src/main/webapp/WEB-INF/wurfl/wurfl_patch.xml");
+      wurflFilePatch.setLastModified((new Date()).getTime()); // try to reload again while another reload is in progress
+      Thread.sleep(10000);
+      
+      wurflCS.cleanup();
+
+
    }
 
 }

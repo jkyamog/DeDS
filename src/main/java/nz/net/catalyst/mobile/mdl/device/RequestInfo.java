@@ -96,9 +96,6 @@ public class RequestInfo {
    }
    
    private void validateHeaders() throws IllegalArgumentException {
-      if (headers == null)
-         throw new IllegalArgumentException ("headers is empty");
-      
       if (!headers.containsKey("user-agent")) 
          throw new IllegalArgumentException ("required http header 'user-agent' is missing");
    }
