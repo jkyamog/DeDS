@@ -111,12 +111,17 @@ public class WurflCapabilityServiceImplTest {
       
       // need to wait for reload to finish
       System.out.println("waiting for reload to finish...");
-      Thread.sleep(5000);
+      Thread.sleep(5000); // wait until the fam detects wurfl.xml is changed, otherwise would be hard to
+      // determine which file gets detected first.  testing result will not be consistent
+      
+      // try to reload again while another reload is in progress, by changing the patch file
       File wurflFilePatch = new File("src/main/webapp/WEB-INF/wurfl/wurfl_patch.xml");
-      wurflFilePatch.setLastModified((new Date()).getTime()); // try to reload again while another reload is in progress
-      Thread.sleep(10000);
+      wurflFilePatch.setLastModified((new Date()).getTime()); 
+      
+      Thread.sleep(10000); // wait for a proper reload
       
       wurflCS.cleanup();
+      Thread.sleep(5000); // wait for shutdown
 
 
    }

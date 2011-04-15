@@ -145,6 +145,13 @@ public class CapabilitySerivceControllerTest  extends AbstractJUnit4SpringContex
       String statusInfoStr = csController.getStatusInfo();
       assertEquals(statusInfoStr, mapper.writeValueAsString(statusInfo));
    }
+   
+   @Test
+   public void testHandleUnknownError() {
+      MockHttpServletResponse response = new MockHttpServletResponse();
+      csController.handleUnknownException(new Exception(), response);
+      assertEquals(500, response.getStatus());
+   }
 
 
 }
