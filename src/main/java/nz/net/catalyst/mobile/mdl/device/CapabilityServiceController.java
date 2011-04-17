@@ -118,6 +118,8 @@ public class CapabilityServiceController {
 
    @ExceptionHandler(MissingServletRequestParameterException.class)
    public ModelAndView handleMissingParameters(MissingServletRequestParameterException ex, HttpServletResponse response) {
+      logger.warn("parse problems on input data", ex);
+
       ModelAndView mav = new ModelAndView();
       mav.addObject("error_message", ex.getMessage());
       
