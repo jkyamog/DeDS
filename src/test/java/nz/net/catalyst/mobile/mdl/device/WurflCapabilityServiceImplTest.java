@@ -27,24 +27,18 @@ import java.util.Date;
 import mockit.Expectations;
 import mockit.Injectable;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
 public class WurflCapabilityServiceImplTest {
    
-   WurflCapabilityServiceImpl wurflCS;
-   
    @Injectable
    Logger logger;
    
-   @Before
-   public void setup() {
-      wurflCS = new WurflCapabilityServiceImpl();
-   }
-   
    @Test
    public void testInit() throws IOException {
+      WurflCapabilityServiceImpl wurflCS = new WurflCapabilityServiceImpl();
+
       try {
          wurflCS.init();
          
@@ -77,7 +71,8 @@ public class WurflCapabilityServiceImplTest {
    
    @Test
    public void testReloadAndCleanup() throws InterruptedException {
-      String wurflDirPath = "src/main/webapp/WEB-INF/wurfl";
+      final WurflCapabilityServiceImpl wurflCS = new WurflCapabilityServiceImpl();
+      final String wurflDirPath = "src/main/webapp/WEB-INF/wurfl";
       final File wurflDir = new File(wurflDirPath);
 
       new Expectations() {
@@ -85,7 +80,7 @@ public class WurflCapabilityServiceImplTest {
             setField(wurflCS, "logger", logger);
 
             // these are the correct logs that should happen, note there are some concurrency happening
-            // so the test below added some Thread sleep for the proper events to happen in
+            // so the test below added some sleep for the proper events to happen in
             // consistent sequence
             logger.info("search for wurfl file and patches on: " + wurflDir.getAbsolutePath());
             logger.debug("wurfl file: " + wurflDir.getAbsolutePath() + "/wurfl.xml");
@@ -99,31 +94,48 @@ public class WurflCapabilityServiceImplTest {
             logger.warn("unable to obtain wurflReloadLock another thread be in the process of reloading, not reloading");
             logger.info("reload successful");
             logger.info("stopping watching wurfl");
-
          }
       };
       
       wurflCS.setWurflDirPath(wurflDirPath);
       wurflCS.init();
       
-      File wurflFile = new File("src/main/webapp/WEB-INF/wurfl/wurfl.xml");
-      wurflFile.setLastModified((new Date()).getTime());
-      
-      // need to wait for reload to finish
-      System.out.println("waiting for reload to finish...");
-      Thread.sleep(5000); // wait until the fam detects wurfl.xml is changed, otherwise would be hard to
-      // determine which file gets detected first.  testing result will not be consistent
-      
-      // try to reload again while another reload is in progress, by changing the patch file
-      File wurflFilePatch = new File("src/main/webapp/WEB-INF/wurfl/wurfl_patch.xml");
-      wurflFilePatch.setLastModified((new Date()).getTime()); 
-      
-      Thread.sleep(10000); // wait for a proper reload
-      
-      wurflCS.cleanup();
-      Thread.sleep(5000); // wait for shutdown
+      class ReloadThread extends Thread {
 
+         @Override
+         public void run() {
+            System.out.println("touching wurfl.xml");
+            File wurflFile = new File("src/main/webapp/WEB-INF/wurfl/wurfl.xml");
+            wurflFile.setLastModified((new Date()).getTime());
+            
+            try {
+               sleep(3000);
+               // wait until the fam detects wurfl.xml is changed, otherwise would be hard to
+               // determine which file gets detected first.  testing result will not be consistent
+               
+               // try to reload again while another reload is in progress, by changing the patch file
+               System.out.println("touching wurfl_patch.xml");
+               File wurflFilePatch = new File("src/main/webapp/WEB-INF/wurfl/wurfl_patch.xml");
+               wurflFilePatch.setLastModified((new Date()).getTime()); 
+               
+               // need to wait for reload to finish
+               System.out.println("waiting for reload to finish...");
+               sleep(10000); 
+               
+               wurflCS.cleanup();
+               System.out.println("waiting for shutdown");
+               sleep(5000); // wait for shutdown
 
+            } catch (InterruptedException e) {
+               fail("not expecting an exception");
+            } 
+         }
+         
+      };
+
+      ReloadThread rt = new ReloadThread();
+      rt.start();
+      rt.join();
    }
 
 }
