@@ -9,7 +9,7 @@
   <url>http://gitorious.org/deds</url>
   <properties>
    <spring.version>3.0.5.RELEASE</spring.version>
-   <jmockit.version>0.999.8</jmockit.version>
+   <jmockit.version>0.999.4</jmockit.version>
    <sl4j.version>1.6.1</sl4j.version>
   </properties>
   <dependencies>
@@ -67,9 +67,9 @@
       <version>${spring.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>mockit</groupId>
-      <artifactId>jmockit</artifactId>
+    <dependency> <!-- not ideal, but we want to only depend on maven central -->
+      <groupId>org.dspace.dependencies.jmockit</groupId>
+	   <artifactId>dspace-jmockit</artifactId>
       <version>${jmockit.version}</version>
       <scope>test</scope>
     </dependency>
@@ -119,21 +119,9 @@
         <version>2.8</version>
         <configuration>
           <!-- need to set jmockit on -javaagent arg, so it loads first before junit.jar -->
-          <argLine>-javaagent:"${settings.localRepository}"/mockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar</argLine>
+          <argLine>-javaagent:"${settings.localRepository}"/org/dspace/dependencies/jmockit/dspace-jmockit/${jmockit.version}/dspace-jmockit-${jmockit.version}.jar</argLine>
         </configuration>
       </plugin>
     </plugins>
   </build>
-  <repositories>
-  	 <repository>
-  	   <id>public-repository.wurflpro.com</id>
-  		<name>WURFL-Pro Public Repository</name>
-  		<url>http://dev.wurflpro.com/nexus/content/repositories/public-releases/</url>
-	 </repository>
-	 <repository>
-      <id>jmockit-svn</id>
-      <url>http://jmockit.googlecode.com/svn/maven-repo</url>
-      <releases><checksumPolicy>ignore</checksumPolicy></releases>
-    </repository>
-  </repositories>
 </project>

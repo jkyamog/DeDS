@@ -25,14 +25,14 @@ import java.io.IOException;
 import java.util.Date;
 
 import mockit.Expectations;
-import mockit.Injectable;
+import mockit.Mocked;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 
 public class WurflCapabilityServiceImplTest {
    
-   @Injectable
+   @Mocked
    Logger logger;
    
    @Test
