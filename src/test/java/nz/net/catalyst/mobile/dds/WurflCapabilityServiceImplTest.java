@@ -104,11 +104,14 @@ public class WurflCapabilityServiceImplTest {
 
          @Override
          public void run() {
-            System.out.println("touching wurfl.xml");
-            File wurflFile = new File("src/main/webapp/WEB-INF/wurfl/wurfl.xml");
-            wurflFile.setLastModified((new Date()).getTime());
-            
             try {
+               System.out.println("waiting for other wurfl service to shutdown");
+               sleep(3000);
+
+               System.out.println("touching wurfl.xml");
+               File wurflFile = new File("src/main/webapp/WEB-INF/wurfl/wurfl.xml");
+               wurflFile.setLastModified((new Date()).getTime());
+            
                sleep(3000);
                // wait until the fam detects wurfl.xml is changed, otherwise would be hard to
                // determine which file gets detected first.  testing result will not be consistent
