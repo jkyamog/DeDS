@@ -130,7 +130,6 @@
         <version>2.5</version>
         <configuration>
           <encoding>UTF-8</encoding>
-          <outputDirectory>${project.build.outputDirectory}</outputDirectory>
         </configuration>
       </plugin>
       <plugin>
