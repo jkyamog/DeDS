@@ -4,7 +4,7 @@
   <groupId>nz.net.catalyst</groupId>
   <artifactId>mobile-dds</artifactId>
   <packaging>jar</packaging>
-  <version>1.1.0</version>
+  <version>1.1.0SNAPSHOT</version>
   <name>DeDS - Device Detection Service</name>
   <url>https://github.com/jkyamog/DeDS</url>
   <scm>
@@ -23,6 +23,11 @@
           <email>jun@catalyst.net.nz</email>
       </developer>
   </developers>
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
   <properties>
    <spring.version>3.0.5.RELEASE</spring.version>
    <jmockit.version>0.999.4</jmockit.version>
