@@ -1,6 +1,6 @@
-Sample web service clients for device detection service (DDS).  
+Sample web service clients for device detection service (DeDS).
 
-DDS provides a service to detect mobile devices and its capabilities by passing 
+DeDS provides a service to detect mobile devices and its capabilities by passing
 http headers, in particular the 'user-agent' header.  There are other http 
 headers that mobile devices set, however the 'User-Agent' is the only required 
 header.  The client does not need to send all http headers, there 
@@ -29,7 +29,7 @@ For a complete name of capability keys wurfl docs:
 http://wurfl.sourceforge.net/help_doc.php
 
 url:
-dds_url/get_capabilities?header=[json encoded header]&capability=[capability key/name]
+[dds_url]/get_capabilities?header=[json encoded header]&capability=[capability key/name]
 
 - get_statusinfo - 
 Returns an object of the status of the webservice.  status info
@@ -40,16 +40,12 @@ parameters:
 none
 
 url:
-dds_url/get_statusinfo
+[dds_url]/get_statusinfo
 
 [SAMPLE CLIENTS]
 
 - java - 
-under 'sampledds' directory there is a sample servlet, a user can also import 
-this directory into eclipse as a project.
-
-1. copy sampledds.war into your webapps folder.  
-2. Then visit the url "http://yourhost/sampledds/"
+A sample servlet and is a maven project
 
 You can change the dds url on web.xml
 

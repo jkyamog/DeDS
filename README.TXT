@@ -12,16 +12,17 @@ data.
 [HOW TO INSTALL]
 
 1. Download the latest dds.war file from
-http://git.catalyst.net.nz/gitweb?p=dds.git;a=blob_plain;f=main/dist/dds.war;hb=HEAD
+
+https://github.com/jkyamog/DeDS/archives/master
 
 2. Deploy dds.war file into your application server
-on tomcat this is simply copiying dds.war file into the webapps dir
+on tomcat this is simply copying dds.war file into the webapps dir.
 dds.war was tested on java 1.6 and tomcat 5.5/6.  You may need to modify 
 WEB-INF/classes/log4j.properties if your app server is not tomcat and set
 the correct path for dds.log
 
 3. Visit the status page on 
-http://yourhost/dds/services/status_page
+http://yourhost/dds/services/v1/status_page
 
 [UPDATE WURFL FILE AND PATCHES]
 
@@ -36,29 +37,19 @@ of wurfl
 
 Look into README.TXT on sample_clients dir or the link below
 
-http://git.catalyst.net.nz/gitweb?p=dds.git;a=blob_plain;f=sample_clients/README.TXT;hb=HEAD
-
-There are also sample clients below
-
-http://git.catalyst.net.nz/gitweb?p=dds.git;a=tree;f=sample_clients;hb=HEAD
+https://github.com/jkyamog/DeDS/tree/master/sample_clients
 
 [GET THE SOURCE CODE]
 - git -
 
-git clone http://git.catalyst.net.nz/dds.git
-
-- download latest tarball -
-
-http://git.catalyst.net.nz/gitweb?p=dds.git;a=snapshot;h=HEAD;sf=tgz
+git clone git://github.com/jkyamog/DeDS.git
 
 [BUILD THE CODE]
 
-The source tree itself can be imported to eclipse as a java project or
+DeDS is a maven project.  The default packaging is a jar package.  So you will need
+to invoke the following.
 
-cd main
-ant
-
-Should build a new dds.war
+mvn clean package war:war
 
 [CONTACT]
 Jun Yamog - jun@catalyst.net.nz

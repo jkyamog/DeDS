@@ -6,7 +6,7 @@
   <packaging>war</packaging>
   <version>1.0.0</version>
   <name>Sample client for DDS</name>
-  <url>http://gitorious.org/deds</url>
+  <url>https://github.com/jkyamog/DeDS</url>
   <dependencies>
     <dependency>
       <groupId>commons-io</groupId>
