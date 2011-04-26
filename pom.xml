@@ -3,7 +3,7 @@
   <groupId>nz.net.catalyst</groupId>
   <artifactId>mobile-dds</artifactId>
   <packaging>jar</packaging>
-  <version>1.1.1-SNAPSHOT</version>
+  <version>1.1.0-SNAPSHOT</version>
   <name>DeDS - Device Detection Service</name>
   <url>https://github.com/jkyamog/DeDS</url>
   <scm>
@@ -113,7 +113,6 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>dds</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -131,6 +130,7 @@
         <version>2.5</version>
         <configuration>
           <encoding>UTF-8</encoding>
+          <outputDirectory>${project.build.outputDirectory}</outputDirectory>
         </configuration>
       </plugin>
       <plugin>
@@ -147,12 +147,21 @@
         <artifactId>maven-war-plugin</artifactId>
         <version>2.1.1</version>
         <configuration>
+          <warName>dds</warName>
           <webResources>
             <resource>
               <directory>src/main/webapp/WEB-INF/config</directory>
               <targetPath>WEB-INF/classes</targetPath>
             </resource>
           </webResources>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <pushChanges>false</pushChanges>
         </configuration>
       </plugin>
     </plugins>
