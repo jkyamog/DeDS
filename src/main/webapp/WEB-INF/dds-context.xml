@@ -9,7 +9,7 @@
        
   <context:annotation-config/>
            
-  <context:property-placeholder location="/WEB-INF/config/*.properties"/>
+  <context:property-placeholder location="classpath:dds.properties"/>
         
   <bean id="capabilityService" class="nz.net.catalyst.mobile.dds.WurflCapabilityServiceImpl" init-method="init" destroy-method="cleanup">
      <property name="wurflDirPath" value="${mdl.wurflDirPath}"/>
