@@ -7,6 +7,22 @@
   <version>1.1.0</version>
   <name>DeDS - Device Detection Service</name>
   <url>https://github.com/jkyamog/DeDS</url>
+  <scm>
+    <connection>scm:git:git@github.com:jkyamog/DeDS.git</connection>
+    <developerConnection>scm:git:git@github.com:jkyamog/DeDS.git</developerConnection>
+    <url>git@github.com:jkyamog/DeDS.git</url>
+  </scm>
+  <licenses>
+    <license>
+      <name>GNU GENERAL PUBLIC LICENSE, Version 2</name>
+    </license>
+  </licenses>
+  <developers>
+      <developer>
+          <name>Jun Yamog</name>
+          <email>jun@catalyst.net.nz</email>
+      </developer>
+  </developers>
   <properties>
    <spring.version>3.0.5.RELEASE</spring.version>
    <jmockit.version>0.999.4</jmockit.version>
