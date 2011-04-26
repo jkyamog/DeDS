@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package nz.net.catalyst.mobile.mdl.device;
+package nz.net.catalyst.mobile.dds;
 
 import static org.junit.Assert.*;
 
@@ -38,7 +38,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
 
-@ContextConfiguration(locations={"classpath:mdl-context.xml"})
+@ContextConfiguration(locations={"classpath:dds-context.xml"})
 public class CapabilitySerivceControllerTest  extends AbstractJUnit4SpringContextTests {
 
    @Autowired

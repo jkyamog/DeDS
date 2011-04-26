@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package nz.net.catalyst.mobile.mdl.device;
+package nz.net.catalyst.mobile.dds;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,16 +24,13 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-import nz.net.catalyst.mobile.mdl.device.CapabilityService;
-import nz.net.catalyst.mobile.mdl.device.RequestInfo;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-@ContextConfiguration(locations={"classpath:mdl-context.xml"})
+@ContextConfiguration(locations={"classpath:dds-context.xml"})
 public class CapabilityServiceTest extends AbstractJUnit4SpringContextTests {
    
    String userAgent = "NokiaN90-1/2.0523.1.4 Series60/2.8 Profile/MIDP-2.0 Configuration/CLDC-1.1";

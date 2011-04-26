@@ -10,7 +10,7 @@
 
   <servlet>
     <servlet-name>sample servlet</servlet-name>
-    <servlet-class>nz.net.catalyst.mobile.mdl.device.sample.SampleServlet</servlet-class>
+    <servlet-class>nz.net.catalyst.mobile.dds.sample.SampleServlet</servlet-class>
     <init-param>
       <param-name>dds_url</param-name>
       <param-value>http://localhost:8080/dds/services/v1</param-value>

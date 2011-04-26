@@ -11,10 +11,10 @@
            
   <context:property-placeholder location="/WEB-INF/config/*.properties"/>
         
-  <bean id="capabilityService" class="nz.net.catalyst.mobile.mdl.device.WurflCapabilityServiceImpl" init-method="init" destroy-method="cleanup">
+  <bean id="capabilityService" class="nz.net.catalyst.mobile.dds.WurflCapabilityServiceImpl" init-method="init" destroy-method="cleanup">
      <property name="wurflDirPath" value="${mdl.wurflDirPath}"/>
   </bean>
 
-  <bean id="jsonService" class="nz.net.catalyst.mobile.mdl.device.JacksonJsonServiceImpl"/>
+  <bean id="jsonService" class="nz.net.catalyst.mobile.dds.JacksonJsonServiceImpl"/>
   
 </beans>

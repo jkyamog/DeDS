@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package nz.net.catalyst.mobile.mdl.device;
+package nz.net.catalyst.mobile.dds;
 
 /**
  * just a simple bean to hold the current status of a capability service

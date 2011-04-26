@@ -6,12 +6,12 @@
 		version="2.4">
 
  <display-name>Device Detection Service</display-name>
- <description>Wurfl Device Detection Service</description>
+ <description>Device Detection Service</description>
 
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>
-    /WEB-INF/mdl-context.xml
+        /WEB-INF/dds-context.xml
     </param-value>
   </context-param>
   
@@ -30,10 +30,4 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
-  <welcome-file-list>
-    <welcome-file>
-      index.jsp
-    </welcome-file>
-  </welcome-file-list>
-  
 </web-app>

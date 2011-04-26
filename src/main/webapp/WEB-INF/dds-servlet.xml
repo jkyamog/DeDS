@@ -11,7 +11,7 @@
                   
   <context:property-placeholder location="/WEB-INF/config/*.properties"/>
 
-  <bean id="capabilityServiceController" class="nz.net.catalyst.mobile.mdl.device.CapabilityServiceController"/>
+  <bean id="capabilityServiceController" class="nz.net.catalyst.mobile.dds.CapabilityServiceController"/>
 
   <!-- simple view resolver -->
   <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">

@@ -7,7 +7,7 @@
  * without any warranty.
  */
 
-package nz.net.catalyst.mobile.mdl.device.sample;
+package nz.net.catalyst.mobile.dds.sample;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
