@@ -49,7 +49,7 @@ git clone git://github.com/jkyamog/DeDS.git
 DeDS is a maven project.  The default packaging is a jar package.  So you will need
 to invoke the following.
 
-mvn clean package war:war
+mvn clean compile war:war
 
 [CONTACT]
 Jun Yamog - jun@catalyst.net.nz
