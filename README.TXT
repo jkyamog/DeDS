@@ -51,5 +51,14 @@ to invoke the following.
 
 mvn clean compile war:war
 
+If you are interested to use the java code directly, its also available on maven
+central. Just add the dependency below:
+
+<dependency>
+  <groupId>nz.net.catalyst</groupId>
+  <artifactId>mobile-dds</artifactId>
+  <version>1.1.0</version>
+</dependency>
+
 [CONTACT]
 Jun Yamog - jun@catalyst.net.nz
