@@ -13,7 +13,7 @@
     <servlet-class>nz.net.catalyst.mobile.dds.sample.SampleServlet</servlet-class>
     <init-param>
       <param-name>dds_url</param-name>
-      <param-value>http://localhost:8080/dds/services/v1</param-value>
+      <param-value>http://deds.jkyamog.cloudbees.net/services/v1</param-value>
     </init-param>
   </servlet>
   

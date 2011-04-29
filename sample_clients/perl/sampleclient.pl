@@ -12,7 +12,7 @@ use JSON;
 use Data::Dumper;
 use LWP::Simple;
 
-$dds_url = 'http://localhost:8080/dds/services/v1';
+$dds_url = 'http://deds.jkyamog.cloudbees.net/services/v1';
 
 $json = JSON->new->allow_nonref;
 

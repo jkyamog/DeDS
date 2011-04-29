@@ -84,7 +84,7 @@ public class CapabilityServiceController {
          return jsonService.serialize(status);
    }
    
-   @RequestMapping("status_page")
+   @RequestMapping({"/", "status_page"})
    public String getStatusPage(HttpServletRequest request, Model model) {
 
       StatusInfo status = capabilityService.getStatusInfo();

@@ -39,6 +39,13 @@ Look into README.TXT on sample_clients dir or the link below
 
 https://github.com/jkyamog/DeDS/tree/master/sample_clients
 
+[DEMO SERVICE]
+
+An instance of DeDS is running on Cloud Bees.  The sample clients are pointed to the
+url below.
+
+http://deds.jkyamog.cloudbees.net/services/v1
+
 [GET THE SOURCE CODE]
 - git -
 

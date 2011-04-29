@@ -8,7 +8,7 @@
  * without any warranty.
  */
 
-define("DDS_WS_URL", 'http://localhost:8080/dds/services/v1');
+define("DDS_WS_URL", 'http://deds.jkyamog.cloudbees.net/services/v1');
 header('Content-type: text/plain');
 
 $headers = getallheaders();
@@ -17,6 +17,7 @@ $json_headers = json_encode($headers);
 // get the capabilities
 $url = DDS_WS_URL.'/get_capabilities?capability=resolution_width&&capability=model_name&capability=xhtml_support_level&headers='.urlencode($json_headers);
 $ch = curl_init($url);
+curl_setopt($ch, CURLOPT_USERAGENT, 'curl');
 curl_setopt($ch, CURLOPT_TIMEOUT_MS, 2000);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $json_response = curl_exec($ch);

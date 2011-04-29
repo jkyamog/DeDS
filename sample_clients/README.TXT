@@ -69,4 +69,9 @@ a single shell script.
 
 requires: JSON and LWP cpan modules
 
+[DEMO SERVICE]
 
+An instance of DeDS is running on Cloud Bees.  The sample clients are pointed to the
+dds_url below.
+
+http://deds.jkyamog.cloudbees.net/services/v1
