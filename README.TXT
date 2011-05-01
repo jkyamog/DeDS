@@ -53,10 +53,9 @@ git clone git://github.com/jkyamog/DeDS.git
 
 [BUILD THE CODE]
 
-DeDS is a maven project.  The default packaging is a jar package.  So you will need
-to invoke the following.
+DeDS is a maven project.  So you will need to invoke the following.
 
-mvn clean compile war:war
+mvn clean package
 
 If you are interested to use the java code directly, its also available on maven
 central. Just add the dependency below:
@@ -64,7 +63,7 @@ central. Just add the dependency below:
 <dependency>
   <groupId>nz.net.catalyst</groupId>
   <artifactId>mobile-dds</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
 </dependency>
 
 [CONTACT]
