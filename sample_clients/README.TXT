@@ -62,6 +62,10 @@ You can change the dds url on constant on the file
 
 requires: php curl and php > 5.2.0
 
+A drupal module has also been built.  Details on the url below
+
+http://drupal.org/sandbox/serenecloud/1153474
+
 - perl - 
 a single shell script.
 
