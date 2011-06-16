@@ -141,4 +141,10 @@
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
+  <repositories>
+    <repository>
+      <id>r.j.o-groups-public</id>
+      <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
 </project>
