@@ -26,13 +26,13 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.jci.listeners.FileChangeListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.ServletContextAware;
 
 import net.sourceforge.wurfl.core.CapabilityNotDefinedException;
 import net.sourceforge.wurfl.core.CustomWURFLHolder;
@@ -47,7 +47,7 @@ import net.sourceforge.wurfl.core.WURFLHolder;
  *
  */
 
-public class WurflCapabilityServiceImpl implements CapabilityService, ServletContextAware {
+public class WurflCapabilityServiceImpl implements CapabilityService {
    
    private final Logger logger = LoggerFactory.getLogger(this.getClass());
    
@@ -60,7 +60,9 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
    private volatile StatusInfo statusInfo;
    private Lock wurflReloadLock = new ReentrantLock();
 
+   @Inject
    private ServletContext servletContext;
+
    private List<FilesystemAlterationMonitor> famList = new ArrayList<FilesystemAlterationMonitor> ();
 
    private String wurflDirPath;
@@ -226,12 +228,6 @@ public class WurflCapabilityServiceImpl implements CapabilityService, ServletCon
 
    public void setWurflDirPath(String wurflDirPath) {
       this.wurflDirPath = wurflDirPath;
-   }
-
-   @Override
-   public void setServletContext(ServletContext servletContext) {
-      this.servletContext = servletContext;
-      
    }
 
    protected class WurflFileListener extends FileChangeListener {
